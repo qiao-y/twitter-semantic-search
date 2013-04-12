@@ -1,0 +1,5 @@
+TODO:
+
+1. The Makefile is broken - jar not runnable 
+2. Remove hard coded log property
+3. Change Email authentication method
