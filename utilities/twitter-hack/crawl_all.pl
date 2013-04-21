@@ -5,7 +5,7 @@ use warnings;
 use File::Basename;
 use Sys::Hostname;
 
-#sendemail -f  qiaoyu.yu@gmail.com -t Twitter-semantic-search@lists.cs.columbia.edu  -u "Test: sent from bash" -m "test" -s smtp.gmail.com:587 -o tls=yes -xu  qiaoyu.yu -xp windows2191
+#sendemail -f  qiaoyu.yu@gmail.com -t Twitter-semantic-search@lists.cs.columbia.edu  -u "Test: sent from bash" -m "test" -s smtp.gmail.com:587 -o tls=yes -xu  qiaoyu.yu -xp dummy
 
 # $_[0]: current file name
 # $_[1]: total file count
