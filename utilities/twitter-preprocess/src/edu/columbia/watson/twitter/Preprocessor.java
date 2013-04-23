@@ -13,8 +13,12 @@ import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 
+import com.cybozu.labs.langdetect.Detector;
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
+
 //output format:
-//tweet id, userid, tweet, time, hashtag(null), location(null), url(null)
+//tweet id, userid, time, hashtag(null), location(null), url(null), tweet
 public class Preprocessor {
 	private static String urlRegex = "\\(?\\b(http://|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
 	
@@ -23,12 +27,28 @@ public class Preprocessor {
 		 return Jsoup.parse(rawText).text();
 	}
 	
+	public static void initLanguageDetector() throws LangDetectException
+	{
+		DetectorFactory.loadProfile("./profiles");
+	}
+	
 	public static void main(String args[])
 	{
 		if (args.length < 1){
-			System.err.print("Usage: run.sh edu.columbia.watson.twitter.Preprocessor filename");
+			System.err.println("Usage: run.sh edu.columbia.watson.twitter.Preprocessor filename");
 			return;
 		}
+		
+		
+		try {
+			initLanguageDetector();
+		} catch (LangDetectException e1) {
+			System.err.println("Error initing language detector!");
+			e1.printStackTrace();
+			return;
+		}
+		
+		
 		BufferedReader in;
 		try {
 			in = new BufferedReader(new FileReader(args[0]));
@@ -40,6 +60,18 @@ public class Preprocessor {
 			  String rawTweet = splitted[2];
 			  String time = splitted.length >= 4 ? splitted[3] : "";
 			  
+			  //detect language
+			  Detector detector;
+			try {
+				detector = DetectorFactory.create();
+				detector.append(rawTweet);
+				if (!detector.detect().equals("en"))
+					continue;
+				//System.out.println(detector.detect());
+			} catch (LangDetectException e) {
+				//swallow the exception
+			}
+			 		  
 			  //extract geo location
 			  String location = "";
 			  if (splitted.length >= 5){
@@ -78,14 +110,15 @@ public class Preprocessor {
 				  }
 				//  System.out.println(urlStr);
 			  }
-			  
-			  System.out.println(id +"\t" + user + "\t" + tweet + "\t" +  time + "\t" + hashTag + "\t" + location + "\t" + urlStr);
+			  if (id == "")
+				  continue;
+			  System.out.println(id + "\t" + user + "\t" +  time + "\t" + hashTag + "\t" + location + "\t" + urlStr + "\t" + tweet + "\t");
 			}
 			in.close();
 		} catch (IOException e) {
-			System.out.println("IO exception!");
+			System.err.println("IO exception!");
 			e.printStackTrace();
-		}
+		} 
 
 	}
 }
