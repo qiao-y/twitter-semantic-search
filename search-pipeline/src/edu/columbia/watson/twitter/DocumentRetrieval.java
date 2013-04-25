@@ -67,12 +67,22 @@ public class DocumentRetrieval {
 	}
 	
 	
-	public static void main(String [] args) throws ParseException, IOException
+	public static void main(String [] args) 
 	{
 		DocumentRetrieval test = new DocumentRetrieval(new QueryClause("hello"));
-		List<Long> result = test.retrieveAllRelevantDocuments();
-		for (Long zizi : result)
-			System.out.println(zizi);
+		List<Long> result;
+		try {
+			result = test.retrieveAllRelevantDocuments();
+			for (Long zizi : result)
+				System.out.println(zizi);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 				
 	}
 	
