@@ -3,10 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/jsoup/jsoup-1.7.2.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/apache-log4j-1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/language-detection/lib/langdetect.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/jsonic/jsonic-1.3.0.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/core/lucene-core-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/analysis/common/lucene-analyzers-common-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-core-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-analyzers-common-4.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

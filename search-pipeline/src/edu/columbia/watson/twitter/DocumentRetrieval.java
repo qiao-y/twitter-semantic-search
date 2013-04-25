@@ -66,7 +66,7 @@ public class DocumentRetrieval {
 
 	}
 	
-	/*
+	
 	public static void main(String [] args) throws ParseException, IOException
 	{
 		DocumentRetrieval test = new DocumentRetrieval(new QueryClause("hello"));
@@ -75,6 +75,6 @@ public class DocumentRetrieval {
 			System.out.println(zizi);
 				
 	}
-	*/
+	
 	
 }

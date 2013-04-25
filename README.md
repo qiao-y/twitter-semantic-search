@@ -11,7 +11,7 @@ search-pipeline
 DocumentRetrieval: Search through Lucene indices  
 
 
-TODO:
+TODO:  
 1. Use log4j for all the logging  
 2. Use ant to build the project  
 3. Refactor the main class  

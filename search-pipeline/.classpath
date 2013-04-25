@@ -2,9 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/queries/lucene-queries-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/core/lucene-core-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/analysis/common/lucene-analyzers-common-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-4.2.1/queryparser/lucene-queryparser-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-core-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-queries-4.2.1 2.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/lucene-queryparser-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-analyzers-common-4.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
