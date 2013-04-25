@@ -89,6 +89,8 @@ public class Preprocessor {
 			  String[] tweetSplitted = tweet.split(" ");
 			  tweet = "";	//ready to reuse
 			  for (String tweetPart : tweetSplitted){		//remove @ tags and extract # tags
+				  if (tweetPart.length() <= 0)
+					  break;
 				  char firstChar = tweetPart.charAt(0);
 				  if (firstChar == '#'){
 					  //tweet += tweetPart.substring(1);
@@ -108,7 +110,6 @@ public class Preprocessor {
 				  if (urlStr.startsWith("(") && urlStr.endsWith(")")){
 					  urlStr = urlStr.substring(1, urlStr.length() - 1);
 				  }
-				//  System.out.println(urlStr);
 			  }
 			  if (id == "")
 				  continue;
