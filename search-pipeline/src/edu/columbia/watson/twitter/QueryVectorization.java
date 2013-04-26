@@ -21,25 +21,26 @@ public class QueryVectorization {
 	public void loadDictionaryToMap(String fileName) throws IOException{
 	  //  Path[] pathArr= null;
 	    Configuration conf = new Configuration();
-	    Path input = new Path("/Users/qiaoyu/Downloads/dictionary.file-0");
+	    Path input = new Path("/mnt/corpus/dict/dictionary.file-0");
 	    FileSystem fs = input.getFileSystem(conf);
-	    Writer writer = new OutputStreamWriter(System.out);
+	   Writer writer = new OutputStreamWriter(System.out);
 	  
-        SequenceFileIterator<?, ?> iterator = new SequenceFileIterator<Writable, Writable>(input, true, conf);
-        writer.append("Key class: ").append(iterator.getKeyClass().toString());
-        writer.append(" Value Class: ").append(iterator.getValueClass().toString()).append('\n');
+            SequenceFileIterator<?,?> iterator = new SequenceFileIterator<Writable, Writable>(input, true, conf);
+	   // writer.append("Key class: ").append(iterator.getKeyClass().toString());
+            //writer.append(" Value Class: ").append(iterator.getValueClass().toString()).append('\n');
  
-        while (iterator.hasNext()) {
-            Pair<?, ?> record = iterator.next();
-            String key = record.getFirst().toString();
-            writer.append("Key: ").append(key);
-            String str = record.getSecond().toString();
-            writer.append(": Value: ").append(str);
-            writer.write('\n');
-            
-        }
+            while (iterator.hasNext()) {
+            	Pair<?,?> record = iterator.next();
+            	String key = record.getFirst().toString();
+            //	writer.append("Key: ").append(key);
+            	String str = record.getSecond().toString();
+            //	writer.append(": Value: ").append(str);
+		dictionary.put(key,Integer.valueOf(str));
+            //	writer.write('\n');
 
-        
+       	   }
+
+        System.out.println(dictionary.size());
         
 //	    if (fs.getFileStatus(input).isDir()) {
 //	      pathArr = FileUtil.stat2Paths(fs.listStatus(input, new OutputFilesFilter()));
