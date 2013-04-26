@@ -1,0 +1,15 @@
+1. Description:
+This directory contains 3 utilities helping perform LSA:
+
+(1) SequenceFileMaker: Similar to seqdirectory in Mahout (https://cwiki.apache.org/MAHOUT/creating-vectors-from-text.html), except that the input is one large file. Each line of the given file is treated as a document.
+
+(2) MySQLVecPersister: Given a file containing vectors, the program stores the vector into MySQL database.
+
+(3) MySQLVecReader: A demo of how to read vectors from MySQL database.
+
+2. How to run:
+sh run.sh <program_name>
+<program_name>: the name of 1.(1), 1.(2) or 1.(3)
+
+Wei Wang
+Apr 25, 2013
