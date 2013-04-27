@@ -34,10 +34,16 @@ public class DictionaryCache {
 		return dictionary.get(word);
 	}
 	
+	public int getDicSize()
+	{
+		return dictionary.size();
+	}
+	
 	private DictionaryCache() 
 	{
 		loadDictionaryToMap(GlobalProperty.getInstance().getDicPath());
 	}
+	
 	
 	private void loadDictionaryToMap(String fileName)
 	{

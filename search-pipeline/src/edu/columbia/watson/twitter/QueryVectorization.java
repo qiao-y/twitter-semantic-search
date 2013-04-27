@@ -20,7 +20,7 @@ public class QueryVectorization {
 		 * a very ugly way now - split by space
 		 */
 		String [] splitted = query.split(" ");
-		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();	//wordID -> frequency
 		for (String term : splitted){
 			int wordID = DictionaryCache.getInstance().getWordID(term);
 			if (termFrequencyCount.containsKey(wordID))
@@ -29,7 +29,7 @@ public class QueryVectorization {
 				termFrequencyCount.put(wordID, 1);
 		}	
 		
-		Vector result = new RandomAccessSparseVector(termFrequencyCount.size());
+		Vector result = new RandomAccessSparseVector(DictionaryCache.getInstance().getDicSize());
 		
 		for (Map.Entry<Integer, Integer> entry : termFrequencyCount.entrySet())
 			result.set(entry.getKey(), entry.getValue());
@@ -40,6 +40,7 @@ public class QueryVectorization {
 	
 	public static void main(String args[]) throws IOException
 	{
+		QueryVectorization.getSparseVectorFromString("hello world");
 //		QueryVectorization zizi = new QueryVectorization();
 	//	zizi.loadDictionaryToMap("/mnt/corpus/dict/dictionary.file-0");
 	}
