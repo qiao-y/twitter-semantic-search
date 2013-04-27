@@ -32,7 +32,7 @@ public class LuceneIndexBuilder {
 	public static void main(String args[]) throws IOException{
 		final File docDir = new File(docsPath);
 		if (!docDir.exists() || !docDir.canRead()) {
-			System.out.println("Document directory '" +docDir.getAbsolutePath()+ "' does not exist or is not readable, please check the path");
+			System.out.println("Document directory '" + docDir.getAbsolutePath()+ "' does not exist or is not readable, please check the path");
 			System.exit(1);
 		}
 

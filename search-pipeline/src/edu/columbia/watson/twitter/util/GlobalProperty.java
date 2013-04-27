@@ -15,14 +15,14 @@ public class GlobalProperty {
 	private static GlobalProperty instance = null;
 	private String corpusDir;
 	private String indexDir;
+	private String dicPath;
 	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
 			instance = new GlobalProperty();
 		return instance;
 	}
-	
-	
+		
 	private GlobalProperty() {
 		Properties prop = new Properties();
 		try {
@@ -36,6 +36,7 @@ public class GlobalProperty {
 		
 		corpusDir = prop.getProperty("Corpus_Dir");
 		indexDir = prop.getProperty("Corpus_Index");
+		dicPath = prop.getProperty("Dictionary_File");
 	}
 
 	public String getCorpusDir() {
@@ -46,5 +47,8 @@ public class GlobalProperty {
 		return indexDir;
 	}
 
+	public String getDicPath() {
+		return dicPath;
+	}
 	
 }
