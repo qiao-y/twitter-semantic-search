@@ -91,6 +91,15 @@ public class Preprocessor {
 			  for (String tweetPart : tweetSplitted){		//remove @ tags and extract # tags
 				  if (tweetPart.length() <= 0)
 					  break;
+				  boolean all_number = true;
+				  //remove numbers
+				  for (int i = 0 ; i < tweetPart.length() ; ++i)
+					  if (!('0' <= tweetPart.charAt(i) && tweetPart.charAt(i) <= '9')){
+						  all_number = false;
+						  break;
+					  }
+				  if (all_number)
+					  continue;
 				  char firstChar = tweetPart.charAt(0);
 				  if (firstChar == '#'){
 					  //tweet += tweetPart.substring(1);
