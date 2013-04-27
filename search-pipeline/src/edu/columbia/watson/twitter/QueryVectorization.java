@@ -4,36 +4,44 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Writable;
-import org.apache.mahout.common.Pair;
-import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
+import org.apache.mahout.math.RandomAccessSparseVector;
+import org.apache.mahout.math.Vector;
 
-
+/**
+ * Convert a query into vector 
+ * TODO: Change to built-in tokenizer
+ * @author qiaoyu
+ */
 
 public class QueryVectorization {
-	private Map<String,Integer> dictionary = new HashMap<String,Integer>();
 
-	public void loadDictionaryToMap(String fileName) throws IOException{
-		Configuration conf = new Configuration();
-		Path input = new Path(fileName);
-
-		SequenceFileIterator<Writable, IntWritable> iterator = new SequenceFileIterator<Writable, IntWritable>(input, true, conf);
-
-		while (iterator.hasNext()) {
-			Pair<Writable,IntWritable> record = iterator.next();
-			String key = record.getFirst().toString();
-			Integer id = record.getSecond().get();
-			dictionary.put(key,id);
-		}
+	public static Vector getSparseVectorFromString(String query){
+		/**
+		 * a very ugly way now - split by space
+		 */
+		String [] splitted = query.split(" ");
+		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();
+		for (String term : splitted){
+			int wordID = DictionaryCache.getInstance().getWordID(term);
+			if (termFrequencyCount.containsKey(wordID))
+				termFrequencyCount.put(wordID, termFrequencyCount.get(wordID) + 1);
+			else
+				termFrequencyCount.put(wordID, 1);
+		}	
+		
+		Vector result = new RandomAccessSparseVector(termFrequencyCount.size());
+		
+		for (Map.Entry<Integer, Integer> entry : termFrequencyCount.entrySet())
+			result.set(entry.getKey(), entry.getValue());
+		
+		return result;
 	}
+	
 	
 	public static void main(String args[]) throws IOException
 	{
-		QueryVectorization zizi = new QueryVectorization();
-		zizi.loadDictionaryToMap("/mnt/corpus/dict/dictionary.file-0");
+//		QueryVectorization zizi = new QueryVectorization();
+	//	zizi.loadDictionaryToMap("/mnt/corpus/dict/dictionary.file-0");
 	}
 
 }
