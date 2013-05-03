@@ -16,6 +16,10 @@ public class GlobalProperty {
 	private String corpusDir;
 	private String indexDir;
 	private String dicPath;
+	private String mySqlConnectionString;
+	private String mySqlUserName;
+	private String mySqlPassword;
+	private int K;
 	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
@@ -37,6 +41,7 @@ public class GlobalProperty {
 		corpusDir = prop.getProperty("Corpus_Dir");
 		indexDir = prop.getProperty("Corpus_Index");
 		dicPath = prop.getProperty("Dictionary_File");
+		K = Integer.valueOf(prop.getProperty("k"));
 	}
 
 	public String getCorpusDir() {
@@ -49,6 +54,22 @@ public class GlobalProperty {
 
 	public String getDicPath() {
 		return dicPath;
+	}
+
+	public int getK() {
+		return K;
+	}
+
+	public String getMySqlConnectionString() {
+		return mySqlConnectionString;
+	}
+
+	public String getMySqlUserName() {
+		return mySqlUserName;
+	}
+
+	public String getMySqlPassword() {
+		return mySqlPassword;
 	}
 	
 }

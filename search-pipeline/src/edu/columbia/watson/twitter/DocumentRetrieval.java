@@ -1,4 +1,4 @@
-package edu.columbia.watson.twitter;
+				package edu.columbia.watson.twitter;
 
 /**
  * With reference to: Apache Lucene Demo program
@@ -26,6 +26,7 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 public class DocumentRetrieval {
 
 	private static final int MAX_RETURN_DOC_NUMBER = 160000000;
+	//private static Logger logger = Logger.getLogger(DocumentRetrieval.class);
 	private QueryClause queryLine;
 		
 	public DocumentRetrieval(QueryClause theQuery){

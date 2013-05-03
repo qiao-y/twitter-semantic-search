@@ -8,6 +8,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
+import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
 
@@ -20,6 +21,7 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 
 public class DictionaryCache {
 	private static DictionaryCache instance = null;
+	private static Logger logger = Logger.getLogger(DictionaryCache.class);
 	private Map<String,Integer> dictionary = new HashMap<String,Integer>();
 
 	public static DictionaryCache getInstance() 
@@ -59,9 +61,9 @@ public class DictionaryCache {
 				Integer id = record.getSecond().get();
 				dictionary.put(key,id);
 			}
-			System.out.println("Successfully loaded dictionary map, size = " + dictionary.size());
+			logger.info("Successfully loaded dictionary map, size = " + dictionary.size());
 		} catch (IOException e) {
-			System.err.println("Error loading sequence file: " + fileName);
+			logger.error("Error loading sequence file: " + fileName);
 			e.printStackTrace();
 		}
 	}
