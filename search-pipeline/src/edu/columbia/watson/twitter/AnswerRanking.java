@@ -1,5 +1,7 @@
 package edu.columbia.watson.twitter;
-
+/**
+ * @author qiaoyu
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -10,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.apache.mahout.math.Vector;
 
 import edu.columbia.watson.twitter.util.GlobalProperty;
+
+
 
 public class AnswerRanking {
 
