@@ -16,14 +16,15 @@ sub my_sendmail($$$){
         my $host = hostname;
         my $subject = "$host: Finished downloading $_[2]/$_[1]";
         if ($_[1] == $_[2]){
-		$subject = "$host: ALL DONE!!! Finished downloading $_[2]/$_[1]";}
+		$subject = "$host: ALL DONE!!! Finished downloading $_[2]/$_[1]";
+	}
 	my $body = "Hostname: $host\nTotal file count: $_[1]\nDownloaded: $_[2]\nCurrent File Name: $_[0]\nTime: ". localtime;
         my $cmd = "sendemail -f $from -t $to -u \"$subject\" -m \"$body\" -s smtp.gmail.com:587 -o tls=yes -xu  dummy -xp dummy";
         system("$cmd &");
 }
 
 my $count = 1;
-my @all_files = <input/*.dat>;
+my @all_files = <*>;
 my $file_count = scalar(@all_files);
 foreach my $input_file (@all_files){
 	my $basename = basename($input_file,".dat");
@@ -31,8 +32,8 @@ foreach my $input_file (@all_files){
 	my $log_file = "log/$basename.log";
 #	print "input file: $input_file, output file: $output_file \n";
 	my $now_string = localtime;
-	print "[$now_string]: /home/qiaoyu/twitter-hack/run.sh edu.columbia.watson.twitter.TwitterCrawler $input_file $output_file 2>&1 > $log_file\n";	
-	system("/home/qiaoyu/twitter-hack/run.sh edu.columbia.watson.twitter.TwitterCrawler $input_file $output_file 2>&1 > $log_file\n");
+	print "[$now_string]: /home/qiaoyu/latest/twitter-semantic-search/utilities/twitter-hack/etc/run.sh edu.columbia.watson.twitter.TwitterCrawler $input_file $output_file > $log_file 2>&1\n";	
+	system("/home/qiaoyu/latest/twitter-semantic-search/utilities/twitter-hack/etc/run.sh edu.columbia.watson.twitter.TwitterCrawler $input_file $output_file $log_file 2>&1");
 	$now_string = localtime;
 	print "[$now_string]: $input_file done...\n";
 	if ($count % 50 == 0){

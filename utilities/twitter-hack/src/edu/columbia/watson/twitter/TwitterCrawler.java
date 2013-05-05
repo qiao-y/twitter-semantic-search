@@ -125,18 +125,19 @@ public class TwitterCrawler {
 			logger.error("Error creating DefaultHttpAsyncClient!");
 			throw new Exception(e);
 		}
-		
+	 	logger.info("Done initializing http client");	
 		List<HttpGet> requests = new ArrayList<HttpGet>();
 		
 		int requestSize = 0;
 		try{
 			BufferedReader in = new BufferedReader(new FileReader(dataFileName));
+			logger.info("Done opening data file");
 			while (in.ready()) {
 				  requestSize++;
 				  String line = in.readLine();		//each data file contains ~10000 lines, so it is reasonable to store them entirely in memory
 				  String[] arr = line.split("\t");
 				  long id = Long.parseLong(arr[0]);
-		          String username = (arr.length > 1) ? arr[1] : "a";
+		          	String username = (arr.length > 1) ? arr[1] : "a";
 		          String url = getUrl(id, username);
 		          requests.add(new HttpGet(url));			//add each url to httpget list
 			}
@@ -159,6 +160,7 @@ public class TwitterCrawler {
 //        	logger.error("Error creating output file, output filename = " + outputFileName + ", error message = " + e.getMessage());        	
 //        }	
 //		
+	logger.info("before staring http client");
         httpclient.start();
         try {
             latch = new CountDownLatch(requests.size());         	//make MAX_CONNECTION concurrent connections
