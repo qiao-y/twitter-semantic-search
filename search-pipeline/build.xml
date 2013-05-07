@@ -26,7 +26,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac classpathref="lib.path.id" srcdir="${src.dir}" destdir="${classes.dir}"/>
+        <javac classpathref="lib.path.id" srcdir="${src.dir}" destdir="${classes.dir}" optimize="on" debug="on"/>
     </target>
 
     <target name="jar" depends="compile">
