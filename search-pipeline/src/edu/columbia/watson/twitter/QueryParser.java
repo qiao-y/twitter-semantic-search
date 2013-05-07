@@ -58,11 +58,12 @@ public class QueryParser {
 			}
 		}
 		logger.info("Done parsing query, totoal size = " + result.size());
+	
 		return result;
 	}
 
 	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException{
-		QueryParser.getAllQueriesFromFile("/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/data/2012.xml");
+		QueryParser.getAllQueriesFromFile("/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/data/2011.xml");
 
 	}
 
