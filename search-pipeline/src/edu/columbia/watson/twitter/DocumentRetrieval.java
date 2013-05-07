@@ -87,7 +87,7 @@ public class DocumentRetrieval {
 
 		//only return the tweet ID fields
 		//actually in addition we still have the absolute path saved
-		int count = 1;
+		int count = 0;
 		for (ScoreDoc doc : hits){
 			Long tweetID = Long.parseLong((searcher.doc(doc.doc).get("tweetID")));
 			float score = doc.score / results.getMaxScore();

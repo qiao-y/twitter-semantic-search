@@ -46,7 +46,7 @@ use Getopt::Long;
 my $root = "/trec/trec20/microblog";
 my $qrels_root = "$root/eval";
 my $qrels_all = "$qrels_root/qrelsfile";
-my $trec_eval_loc = "/usr/local/bin/trec_eval";
+my $trec_eval_loc = "/home/qiaoyu/trec_eval.9.0/trec_eval";
 
 my $trec_eval_opts = "-q -M1000";
 my $rel_cutoff = 1;
