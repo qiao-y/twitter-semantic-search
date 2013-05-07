@@ -6,7 +6,9 @@ package edu.columbia.watson.twitter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -32,7 +34,6 @@ public class DocumentRetrieval {
 	private IndexReader reader;
 	private IndexSearcher searcher;
 	private Analyzer analyzer;
-	
 	
 	public DocumentRetrieval() throws IOException{
 		try {
@@ -88,12 +89,15 @@ public class DocumentRetrieval {
 		//only return the tweet ID fields
 		//actually in addition we still have the absolute path saved
 		int count = 0;
+		Set<Long> tweetIDSet = new HashSet<Long>(); //to remove duplicate tweet id
 		for (ScoreDoc doc : hits){
 			Long tweetID = Long.parseLong((searcher.doc(doc.doc).get("tweetID")));
 			float score = doc.score / results.getMaxScore();
-			
-			TrecResult newResult = new TrecResult(topicNumber,tweetID,count++,score,"alphaRun");
-			result.add(newResult);
+			if (!tweetIDSet.contains(tweetID)){
+				tweetIDSet.add(tweetID);
+				TrecResult newResult = new TrecResult(topicNumber,tweetID,count++,score,"alphaRun");
+				result.add(newResult);
+			}
 		}
 
 		return result;
