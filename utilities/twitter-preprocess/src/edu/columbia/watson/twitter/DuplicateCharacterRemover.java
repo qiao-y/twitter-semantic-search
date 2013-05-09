@@ -18,6 +18,10 @@ public class DuplicateCharacterRemover {
 			while (in.ready()) {	
 				String line = in.readLine();
 				String[] all = line.split("\t");
+				if (all.length < 7){
+					System.out.println(line);
+					continue;
+				}
 				String tweet = all[6];
 				String[] splitted = tweet.split(" ");
 				StringBuilder all_sb = new StringBuilder();
