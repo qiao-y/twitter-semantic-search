@@ -34,27 +34,6 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 public class QueryVectorization {
 	private static Logger logger = Logger.getLogger(DocumentRetrieval.class);
 	
-	private static String writeVecTransposed(Vector vec) {
-		String pathStr = GlobalProperty.getInstance().getTempDir() + "twitter-semantic-search/query-ssvd/transposed";
-		Path path = new Path(pathStr);
-		int termNum = DictionaryCache.getInstance().getDicSize();
-		Configuration conf = new Configuration();
-		if (conf == null) {
-			logger.error("Cannot initialize Hadoop Configuration");
-			//throw new IOException("No Hadoop configuration present");
-			return null;
-		}
-		
-		try {
-			MatrixUtils.write(path, conf, matrix);
-		} catch (IOException e) {
-			logger.error("Cannot write transposed query matrix to " + pathStr);
-			e.printStackTrace();
-			return null;
-		}
-		return pathStr;
-	}
-	
 	private static Matrix transoposeVector(Vector vec) {
 		SparseMatrix matrix = new SparseMatrix(vec.size(), 1);
 		matrix.assignColumn(0, vec);
@@ -115,46 +94,6 @@ public class QueryVectorization {
 		Vector vectorQPrimeT = vectorQPrime.viewColumn(0);
 
 		return vectorQPrimeT;
-	}
-
-	private static String writeTmpVector(Vector vec) {
-		String pathStr = GlobalProperty.getInstance().getTempDir() + "twitter-semantic-search/query-ssvd/input";
-		Configuration conf = new Configuration();
-		Path path = new Path(pathStr);
-		IntWritable key = new IntWritable(0);
-		VectorWritable value = new VectorWritable(vec);
-		SequenceFile.Writer writer = null;
-		try { 
-			FileSystem fs = FileSystem.get(URI.create(pathStr), conf);
-			writer = SequenceFile.createWriter(fs, conf, path, key.getClass(), value.getClass());
-			writer.append(key, value);
-		} catch (IOException e) {
-			logger.error("Error writing sequence file: " + pathStr);
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeStream(writer); 
-		} 
-		return pathStr;
-	}
-	
-	private static Vector readSingleVector(String pathStr) {
-		Configuration conf = new Configuration();
-		Path path = new Path(pathStr);
-		SequenceFileIterator<IntWritable, VectorWritable> iterator;
-		Vector vec = null;
-		try {
-			iterator = new SequenceFileIterator<IntWritable, VectorWritable>(path, true, conf);
-			while (iterator.hasNext()) {
-				Pair<IntWritable, VectorWritable> record = iterator.next();
-				vec = record.getSecond().get();
-				break;
-			}
-			logger.info("Successfully read vector U: " + pathStr);
-		} catch (IOException e) {
-			logger.error("Error reading vector U: " + pathStr);
-			e.printStackTrace();
-		}
-		return vec;
 	}
 
 	public static void main(String args[]) throws IOException

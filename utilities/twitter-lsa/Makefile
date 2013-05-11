@@ -7,7 +7,8 @@ JC = javac
 CLASSES = \
 					src/edu/columbia/watson/twitter/lsa/util/SequenceFileMaker.java \
 					src/edu/columbia/watson/twitter/lsa/util/MySQLVecPersister.java \
-					src/edu/columbia/watson/twitter/lsa/util/MySQLVecReader.java
+					src/edu/columbia/watson/twitter/lsa/util/MySQLVecReader.java \
+					src/edu/columbia/watson/twitter/lsa/util/DiagonalMatrixInv.java
 
 default: classes
 

@@ -25,6 +25,8 @@ public class GlobalProperty {
 	private int K;
 	private int docNum;
 	
+	public static final double EPSILON = 1e-6;
+	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
 			instance = new GlobalProperty();

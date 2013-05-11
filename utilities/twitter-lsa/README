@@ -7,9 +7,11 @@ This directory contains 3 utilities helping perform LSA:
 
 (3) MySQLVecReader: A demo of how to read vectors from MySQL database.
 
+(4) DiagonalMatrixInv: Calculate the inverse matrix of given diagonal matrix
+
 2. How to run:
 sh run.sh <program_name>
-<program_name>: the name of 1.(1), 1.(2) or 1.(3)
+<program_name>: the name of 1.(1), 1.(2), 1.(3) or 1.(4)
 
 Wei Wang
 Apr 25, 2013
