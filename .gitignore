@@ -5,3 +5,4 @@
 .Trashes
 search-pipeline/bin/*
 search-pipeline/build/*
+search-pipeline/.classpath
