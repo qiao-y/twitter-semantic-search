@@ -66,6 +66,9 @@ public class MySQLVecPersister {
 						true,
 						conf)) {
 				rowId = record.getFirst().get();
+				if (rowId % 10000 == 0) {
+					System.out.println("Processing row " + rowId);
+				}
 				if (rowId < rowStart) {
 					continue;
 				}
