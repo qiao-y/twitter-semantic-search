@@ -12,11 +12,9 @@ DocumentRetrieval: Search through Lucene indices
 
 
 TODO:  
-1. Use log4j for all the logging  
-2. Use n-gram  
-3. Use twitter-specific tokenizer  
-4. Use URLs as part of corpus  
-5. Test rank reduction  
+1. Use n-gram  
+2. Use twitter-specific tokenizer  
+3. Use URLs as part of corpus  
 
 Please direct all questions and suggestions to our mailing list: twitter-semantic-search@lists.cs.columbia.edu  
   

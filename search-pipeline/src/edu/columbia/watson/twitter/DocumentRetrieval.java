@@ -6,7 +6,9 @@ package edu.columbia.watson.twitter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -33,7 +35,6 @@ public class DocumentRetrieval {
 	private IndexSearcher searcher;
 	private Analyzer analyzer;
 	
-	
 	public DocumentRetrieval() throws IOException{
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
@@ -53,23 +54,20 @@ public class DocumentRetrieval {
 	 * @throws ParseException 
 	 * @throws IOException 
 	 */
-	public List<Long> retrieveLinkedTweetByID(long tweetID) throws ParseException, IOException {
+	public String retrieveLinkedTweetByID(long tweetID) throws ParseException, IOException {
 		QueryParser parser = new QueryParser(Version.LUCENE_42, "tweetID", analyzer);
 		String queryString = String.valueOf(tweetID);
 		Query query = parser.parse(queryString);
 
 		//XXX: test this value. should be 1
-		TopDocs results = searcher.search(query, 10);
+		TopDocs results = searcher.search(query, 1);
 		ScoreDoc[] hits = results.scoreDocs;
-		List<Long> result = new ArrayList<Long>();
-
-		//only return the tweet ID fields
-		//actually in addition we still have the absolute path saved
+	
 		for (ScoreDoc doc : hits){
-			Long retrievedTweetID = Long.parseLong((searcher.doc(doc.doc).get("tweetID")));
-			result.add(retrievedTweetID);
+			String tweet = searcher.doc(doc.doc).get("content");
+			return tweet;
 		}
-		return result;
+		return "";
 	}
 	
 	
@@ -80,20 +78,26 @@ public class DocumentRetrieval {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public List<Long> retrieveAllRelevantDocuments(QueryClause queryLine) throws ParseException, IOException{
+	public List<TrecResult> retrieveAllRelevantDocuments(String topicNumber, String queryLine) throws ParseException, IOException{
 		QueryParser parser = new QueryParser(Version.LUCENE_42, "content", analyzer);
-		String queryString = queryLine.getQuery();
-		Query query = parser.parse(queryString);
+		Query query = parser.parse(queryLine);
 
 		TopDocs results = searcher.search(query, GlobalProperty.getInstance().getK());
 		ScoreDoc[] hits = results.scoreDocs;
-		List<Long> result = new ArrayList<Long>();
+		List<TrecResult> result = new ArrayList<TrecResult>();
 
 		//only return the tweet ID fields
 		//actually in addition we still have the absolute path saved
+		int count = 0;
+		Set<Long> tweetIDSet = new HashSet<Long>(); //to remove duplicate tweet id
 		for (ScoreDoc doc : hits){
 			Long tweetID = Long.parseLong((searcher.doc(doc.doc).get("tweetID")));
-			result.add(tweetID);
+			float score = doc.score / results.getMaxScore();
+			if (!tweetIDSet.contains(tweetID)){
+				tweetIDSet.add(tweetID);
+				TrecResult newResult = new TrecResult(topicNumber,tweetID,count++,score,"alphaRun");
+				result.add(newResult);
+			}
 		}
 
 		return result;

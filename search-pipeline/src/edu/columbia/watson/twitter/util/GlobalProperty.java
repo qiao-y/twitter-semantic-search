@@ -16,10 +16,14 @@ public class GlobalProperty {
 	private String corpusDir;
 	private String indexDir;
 	private String dicPath;
+	private String docFreqPath;
+	private String sigmaIMultUTPath;
+	private String tempDir;
 	private String mySqlConnectionString;
 	private String mySqlUserName;
 	private String mySqlPassword;
 	private int K;
+	private int docNum;
 	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
@@ -41,7 +45,15 @@ public class GlobalProperty {
 		corpusDir = prop.getProperty("Corpus_Dir");
 		indexDir = prop.getProperty("Corpus_Index");
 		dicPath = prop.getProperty("Dictionary_File");
+		docFreqPath = prop.getProperty("DocFreq_File");
+		sigmaIMultUTPath = prop.getProperty("SigmaI_Mult_UT_File");
+		tempDir = prop.getProperty("Temp_Dir");
 		K = Integer.valueOf(prop.getProperty("k"));
+		docNum = Integer.valueOf(prop.getProperty("Document_Num"));
+	}
+	
+	public String getDocFreqPath() {
+		return docFreqPath;
 	}
 
 	public String getCorpusDir() {
@@ -55,9 +67,21 @@ public class GlobalProperty {
 	public String getDicPath() {
 		return dicPath;
 	}
+	
+	public String getSigmaIMultUTPath() {
+		return sigmaIMultUTPath;
+	}
+	
+	public String getTempDir() {
+		return tempDir;
+	}
 
 	public int getK() {
 		return K;
+	}
+	
+	public int getDocNum() {
+		return docNum;
 	}
 
 	public String getMySqlConnectionString() {

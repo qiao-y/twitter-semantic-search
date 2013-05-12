@@ -7,9 +7,13 @@ import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
+import org.apache.mahout.common.iterator.sequencefile.PathFilters;
+import org.apache.mahout.common.iterator.sequencefile.PathType;
+import org.apache.mahout.common.iterator.sequencefile.SequenceFileDirIterable;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
 
 import edu.columbia.watson.twitter.util.GlobalProperty;
@@ -23,6 +27,7 @@ public class DictionaryCache {
 	private static DictionaryCache instance = null;
 	private static Logger logger = Logger.getLogger(DictionaryCache.class);
 	private Map<String,Integer> dictionary = new HashMap<String,Integer>();
+	private Map<Integer,Long> docFreqMap = new HashMap<Integer,Long>();
 
 	public static DictionaryCache getInstance() 
 	{
@@ -36,6 +41,11 @@ public class DictionaryCache {
 		return dictionary.get(word);
 	}
 	
+	public long getWordDocFrequency(int id)
+	{
+		return docFreqMap.get(id);
+	}
+	
 	public int getDicSize()
 	{
 		return dictionary.size();
@@ -44,8 +54,8 @@ public class DictionaryCache {
 	private DictionaryCache() 
 	{
 		loadDictionaryToMap(GlobalProperty.getInstance().getDicPath());
+		loadDocFrequency(GlobalProperty.getInstance().getDocFreqPath());
 	}
-	
 	
 	private void loadDictionaryToMap(String fileName)
 	{
@@ -68,9 +78,29 @@ public class DictionaryCache {
 		}
 	}
 	
+	private void loadDocFrequency(String fileName)
+	{
+		Configuration conf = new Configuration();
+		Path input = new Path(fileName);
+
+		for (Pair<IntWritable,LongWritable> record :
+			new SequenceFileDirIterable<IntWritable,LongWritable>(new Path(fileName),
+					PathType.LIST,
+					PathFilters.logsCRCFilter(),
+					null,
+					true,
+					conf)) {
+
+			Integer termId = record.getFirst().get();
+			Long docFreq = record.getSecond().get();
+			docFreqMap.put(termId,docFreq);
+		}
+		logger.info("Successfully loaded document frequency map, size = " + docFreqMap.size());
+	}
+
 	public static void main(String args[]) throws IOException
 	{
 		System.out.println(DictionaryCache.getInstance().getWordID("hello"));
 	}
-		
+
 }

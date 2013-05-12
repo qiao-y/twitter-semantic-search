@@ -3,4 +3,6 @@
 .DS_Store?
 .Spotlight-V100
 .Trashes
-
+search-pipeline/bin/*
+search-pipeline/build/*
+search-pipeline/.classpath
