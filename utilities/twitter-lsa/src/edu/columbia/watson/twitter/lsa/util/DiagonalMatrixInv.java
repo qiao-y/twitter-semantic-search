@@ -21,12 +21,8 @@ import org.apache.mahout.math.*;
 import org.apache.mahout.math.function.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import java.io.*;
 
@@ -34,6 +30,8 @@ import java.io.*;
  * Persist vectors in given file into database.
  */
 public class DiagonalMatrixInv {
+
+	private static final double EPSILON = 1e-6;
 
 	public static void main(String[] args) throws Exception {
 
@@ -45,32 +43,44 @@ public class DiagonalMatrixInv {
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
 
-		Matrix matrix = null;
+		Matrix vec = null;
 		try {
-			matrix = MatrixUtils.read(conf, new Path(args[0]));
+			vec = MatrixUtils.read(conf, new Path(args[0]));
 		} catch (IOException e) {
 			System.err.println("Cannot read matrix from " + args[1]);
 			e.printStackTrace();
 		}
 
-		Matrix inv = matrix.assign(new Inverse());
+		Matrix matrix = new SparseMatrix(vec.columnSize(), vec.columnSize());
 
+		double ele = 0.0;
+		for (int i = 0; i < vec.columnSize() ; ++i) {
+			ele = vec.viewRow(0).get(i);
+			if (Math.abs(ele) < EPSILON) {
+				matrix.set(i, i, 0.0);
+			} else {
+				matrix.set(i, i, 1.0/ele);
+			}
+		}
+
+		List<SequenceFile.Writer> writers = new ArrayList<SequenceFile.Writer>();
 		try {
-			MatrixUtils.write(new Path(args[1]), conf, inv);
+			for (int i = 0; i < 7; ++i) {
+				writers.add(SequenceFile.createWriter(fs, conf, new Path(args[1]+"/part-0000"+i), IntWritable.class, VectorWritable.class));
+			}
+			for (int i = 0; i < vec.columnSize(); ++i) {
+					IntWritable id = new IntWritable();
+					VectorWritable vector = new VectorWritable();
+					id.set(i);
+					vector.set(matrix.viewRow(i));
+					writers.get(i%7).append(id, vector);
+			}
+			for (int i = 0; i < 7; ++i) {
+				writers.get(i).close();
+			}
 		} catch (IOException e) {
 			System.err.println("Cannot write matrix to " + args[1]);
 			e.printStackTrace();
-		}
-	}
-}
-
-class Inverse implements DoubleFunction {
-	static final double EPSILON = 1e-6;
-	public double apply(double arg) {
-		if (Math.abs(arg) < EPSILON) {
-			return 0.0;
-		} else {
-			return 1.0/arg;
 		}
 	}
 }
