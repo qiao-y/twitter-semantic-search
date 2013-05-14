@@ -26,7 +26,7 @@ public class TempJoiner {
 		Connection conn = DriverManager.getConnection(GlobalProperty.getInstance().getMySqlConnectionString(),
 				GlobalProperty.getInstance().getMySqlUserName(),GlobalProperty.getInstance().getMySqlPassword());
 		int count = 0;
-		String query = "INSERT INTO tweetid_vec_mapping (twitterID, vector) VALUES(?,?)";
+		String query = "INSERT INTO tweetid_vec_mapping (tweetID, vector) VALUES(?,?)";
 		String query2 = "SELECT vector from rowid_vec_mapping where row_id = ";
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		Statement st = conn.createStatement();
@@ -41,12 +41,14 @@ public class TempJoiner {
 
 			Integer rowID = record.getFirst().get();
 			Long tweetID = Long.parseLong(record.getSecond().toString());
-					
+								
 			ResultSet rs = st.executeQuery(query2 + rowID);
+			rs.next();
 			byte[] vec = rs.getBytes("vector");
 			
 			pstmt.setLong(1, tweetID);
 			pstmt.setBytes(2, vec);
+//			System.out.println("rowID = " + rowID + ", tweetID = " + tweetID);
 			pstmt.execute();
 			
 			if (count++ % 10000 == 0){
@@ -54,7 +56,7 @@ public class TempJoiner {
 			}
 			
 			
-			//System.out.println(rowID + "->" + tweetID);
+//			System.out.println(rowID + "->" + tweetID);
 		}
 	}
 }
