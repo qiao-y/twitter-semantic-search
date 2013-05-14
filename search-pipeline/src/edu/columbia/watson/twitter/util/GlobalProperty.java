@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /** NOTE: This class is NOT thread-safe
  */
 public class GlobalProperty {
@@ -27,6 +29,8 @@ public class GlobalProperty {
 	
 	public static final double EPSILON = 1e-6;
 	
+	private static Logger logger = Logger.getLogger(GlobalProperty.class);
+	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
 			instance = new GlobalProperty();
@@ -39,9 +43,9 @@ public class GlobalProperty {
 			InputStream in = new FileInputStream("environment.properties");
 			prop.load(in);
 			in.close();
+			logger.info("Successfully loaded property file.");
 		} catch (IOException e) {
-			System.err.println("Error loading property file!");
-			e.printStackTrace();
+			logger.error("Error loading property file!");
 		}
 		
 		corpusDir = prop.getProperty("Corpus_Dir");
@@ -52,6 +56,9 @@ public class GlobalProperty {
 		tempDir = prop.getProperty("Temp_Dir");
 		K = Integer.valueOf(prop.getProperty("k"));
 		docNum = Integer.valueOf(prop.getProperty("Document_Num"));
+		mySqlConnectionString = prop.getProperty("Connection_String");
+		mySqlUserName = prop.getProperty("User");
+		mySqlPassword = prop.getProperty("Password");
 	}
 	
 	public String getDocFreqPath() {
@@ -99,3 +106,4 @@ public class GlobalProperty {
 	}
 	
 }
+

@@ -59,7 +59,7 @@ public class LuceneIndexBuilder {
 					if (splitted.length < 7)
 						continue;
 					//doc.add(new StringField("path", currentFile, Field.Store.YES));
-					doc.add(new TextField("content", splitted[6], Field.Store.YES));
+					doc.add(new TextField("content", splitted[6], Field.Store.NO));
 					doc.add(new LongField("tweetID", Long.parseLong(splitted[0]), Field.Store.YES));
 					writer.addDocument(doc);
 					writer.commit();
