@@ -59,13 +59,15 @@ public class DocumentRetrieval {
 		//QueryParser parser = new QueryParser(Version.LUCENE_42, "tweetID", analyzer);
 		//String queryString = String.valueOf(tweetID);
 		//Query query = parser.parse(queryString);
-		Query query = NumericRangeQuery.newLongRange("tweetID",tweetID, tweetID, true, true);
+		Query query = NumericRangeQuery.newLongRange("tweetID",1,tweetID, tweetID, true, true);	
 		
 		//XXX: test this value. should be 1
-		TopDocs results = searcher.search(query, 10);
+		TopDocs results = searcher.search(query, 1);
 		ScoreDoc[] hits = results.scoreDocs;
+		logger.info("hits = " + results.totalHits);
 	
 		for (ScoreDoc doc : hits){
+			//System.out.println(searcher.doc(doc.doc).get("tweetID"));
 			String tweet = searcher.doc(doc.doc).get("content");
 			return tweet;
 		}
