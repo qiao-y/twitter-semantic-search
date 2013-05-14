@@ -13,6 +13,7 @@ public class CorpusPersister {
 	public static void main(String[] args) throws  FileNotFoundException {
 		if (args.length < 1){
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.CorpusPersister corpus_dir");
+			return;
 		}
 
 		try {
@@ -37,8 +38,8 @@ public class CorpusPersister {
 			return;
 		}
 
-        String query = "INSERT INTO tweet_corpus (id, tweet) VALUES(?,?)";
-        PreparedStatement pstmt;
+		String query = "INSERT INTO tweet_corpus (id, tweet) VALUES(?,?)";
+		PreparedStatement pstmt;
 		try {
 			pstmt = conn.prepareStatement(query);
 		} catch (SQLException e) {
@@ -46,31 +47,33 @@ public class CorpusPersister {
 			e.printStackTrace();
 			return;
 		}
-        
+
 		BufferedReader in = new BufferedReader(new FileReader(args[0]));
 		String line;
 		try {
 			while ((line = in.readLine()) != null){
-				String [] splitted = line.split("\t");
-				if (splitted.length < 7)
+				try {
+					String [] splitted = line.split("\t");
+					if (splitted.length < 7)
+						continue;
+					String tweet = splitted[6];
+					Long tweetID = Long.parseLong(splitted[0]);
+					pstmt.setLong(1, tweetID);
+					pstmt.setString(2, tweet);
+					pstmt.execute();
+				} catch (NumberFormatException e) {
+					//continue;
 					continue;
-				String tweet = splitted[6];
-				Long tweetID = Long.parseLong(splitted[0]);
-				pstmt.setLong(1, tweetID);
-				pstmt.setString(2, tweet);
-				pstmt.execute();
+				} catch (SQLException e) {
+					continue;
+				}
 			}
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		
+
+
 	}
 
 

@@ -3,6 +3,7 @@ package edu.columbia.watson.twitter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +32,17 @@ public class SearchMain {
 		logger.info("Initializing query parser class");
 		List<QueryClause> queryList = QueryParser.getAllQueriesFromFile(topicFileName);
 		logger.info("Initializing document retrieval class");
-		DocumentRetrieval luceneHelper = new DocumentRetrieval();
+		DocumentRetrieval documentFetcher = new DocumentRetrieval();
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
-			String linkedTweet = luceneHelper.retrieveLinkedTweetByID(linkedID);
+			String linkedTweet = "";
+			try {
+				linkedTweet = documentFetcher.retrieveLinkedTweetByID(linkedID);
+			} catch (SQLException e) {
+				logger.error("Error getting linked tweet, tweet id = " + linkedID);
+				logger.error(e);
+			}
 			logger.info("Before query: " + query.getQueryNumber() + "linked tweet = " + linkedTweet);
 			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector);
@@ -60,7 +67,13 @@ public class SearchMain {
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
-			String linkedTweet = luceneHelper.retrieveLinkedTweetByID(linkedID);
+			String linkedTweet = "";
+			try {
+				linkedTweet = luceneHelper.retrieveLinkedTweetByID(linkedID);
+			} catch (SQLException e) {
+				logger.error("Error getting linked tweet, tweet id = " + linkedID);
+				logger.error(e);
+			}
 			logger.info("Before query: " + query.getQueryNumber());
 			List<TrecResult> result = luceneHelper.retrieveAllRelevantDocuments(query.getQueryNumber(), query.getQuery() + " " + linkedTweet);
 			logger.info("After query: " + query.getQueryNumber());
