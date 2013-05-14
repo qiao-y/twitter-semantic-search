@@ -49,6 +49,17 @@ public class AnswerRanking {
 		List<IDCosinePair> result = new ArrayList<IDCosinePair>();
 		while (allCosValues.size() > 0)
 			result.add(allCosValues.poll());
+		//sort the list according to the cosine value
+		
+		int n = result.size();
+		for (int i = 0 ; i < n ; ++i)
+			for (int j = i + 1 ; j < n ; ++j){
+				if (result.get(i).getCosine() > result.get(j).getCosine()){
+					IDCosinePair temp = result.get(i);
+					result.set(i, result.get(j));
+					result.set(j, temp);
+				}
+			}
 		return result;
 	}
 	
@@ -57,15 +68,11 @@ public class AnswerRanking {
 	{
 		private long ID;
 		private Double cosine;
-		public IDCosinePair(long tweetID, Double cos)
-		{
+		public IDCosinePair(long tweetID, Double cos){
 			ID = tweetID;
 			cosine = cos;
 		}
 		
-		/**
-		 * opposite to normal comparison logic to implement max-heap
-		 */
 		@Override
 		public int compareTo(IDCosinePair arg0) {
 			return cosine.compareTo(arg0.cosine);

@@ -62,11 +62,8 @@ public class QueryVectorization {
 
 	/** do stochastic svd **/
 	public static Vector getLSAQueryVector(String query){
-		
 		Vector vectorQ = getVectorFromString(query);
-		
 		Vector vectorQPrime = getReducedQueryVec(vectorQ);
-
 		return vectorQPrime;
 	}
 	
