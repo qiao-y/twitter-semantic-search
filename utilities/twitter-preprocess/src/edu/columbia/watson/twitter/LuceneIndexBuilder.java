@@ -62,7 +62,7 @@ public class LuceneIndexBuilder {
 					doc.add(new TextField("content", splitted[6], Field.Store.NO));
 					doc.add(new LongField("tweetID", Long.parseLong(splitted[0]), Field.Store.YES));
 					writer.addDocument(doc);
-					writer.commit();
+					//writer.commit();
 				}
 				in.close();
 				System.out.println("File " + currentFile + " done");
