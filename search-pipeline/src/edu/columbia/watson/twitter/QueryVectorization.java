@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.iterator.sequencefile.PathFilters;
 import org.apache.mahout.common.iterator.sequencefile.PathType;
@@ -25,7 +26,7 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
  */
 
 public class QueryVectorization {
-	//private static Logger logger = Logger.getLogger(QueryVectorization.class);
+	private static Logger logger = Logger.getLogger(QueryVectorization.class);
 	
 	/*private static Matrix transoposeVector(Vector vec) {
 		SparseMatrix matrix = new SparseMatrix(vec.size(), 1);
@@ -77,6 +78,7 @@ public class QueryVectorization {
 		
 		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getK());
 		
+		int count = 0;
 		for (Pair<IntWritable,VectorWritable> record :
 				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath,
 					PathType.LIST,
@@ -84,6 +86,8 @@ public class QueryVectorization {
 					null,
 					true,
 					conf)) {
+			logger.info("Iterating IMultU matrix row = " + count);
+			count++;
 			double sum = 0.0;
 			Vector vec = record.getSecond().get();
 			Iterator<Vector.Element> itr = vectorQ.iterateNonZero();
@@ -100,8 +104,7 @@ public class QueryVectorization {
 	public static void main(String args[]) throws IOException
 	{
 		Vector sparseVector = QueryVectorization.getLSAQueryVector("hello world");
-		//		QueryVectorization zizi = new QueryVectorization();
-		//	zizi.loadDictionaryToMap("/mnt/corpus/dict/dictionary.file-0");
+		System.out.println(sparseVector.asFormatString());
 	}
 
 }

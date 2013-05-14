@@ -100,7 +100,11 @@ public class DictionaryCache {
 
 	public static void main(String args[]) throws IOException
 	{
-		System.out.println(DictionaryCache.getInstance().getWordID("hello"));
+	int id = DictionaryCache.getInstance().getWordID("hello");
+	System.out.println(id);
+	System.out.println(DictionaryCache.getInstance().getWordDocFrequency(id));
+	
+	//	System.out.println(DictionaryCache.getInstance().getWordDocFrequency(DictionaryCache.getInstance().getWordID("hello")));
 	}
 
 }
