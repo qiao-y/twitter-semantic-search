@@ -36,10 +36,10 @@ public class SearchMain {
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
 			String linkedTweet = luceneHelper.retrieveLinkedTweetByID(linkedID);
-			logger.info("Before query: " + query.getQueryNumber());
+			logger.info("Before query: " + query.getQueryNumber() + "linked tweet = " + linkedTweet);
 			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector);
-			logger.info("After query: " + query.getQueryNumber());
+			logger.info("After query: " + query.getQueryNumber() + "linked tweet = " + linkedTweet);
 			List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;
 			for (IDCosinePair pair : answerList){
@@ -81,7 +81,7 @@ public class SearchMain {
 			return;
 		}
 		SearchMain driver = new SearchMain();
-		driver.runBaseline(args[0],args[1]);
+		driver.run(args[0],args[1]);
 	}
 
 }

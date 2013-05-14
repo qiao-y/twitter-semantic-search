@@ -60,7 +60,7 @@ public class DocumentRetrieval {
 		Query query = parser.parse(queryString);
 
 		//XXX: test this value. should be 1
-		TopDocs results = searcher.search(query, 1);
+		TopDocs results = searcher.search(query, 10);
 		ScoreDoc[] hits = results.scoreDocs;
 	
 		for (ScoreDoc doc : hits){
@@ -103,6 +103,24 @@ public class DocumentRetrieval {
 		return result;
 
 	}
+
+	public static void main(String[] args){
+		try {
+			DocumentRetrieval dr = new DocumentRetrieval();
+			try {
+				 //System.out.println(dr.retrieveAllRelevantDocuments("Q1","BBC").toString());
+				System.out.println(dr.retrieveLinkedTweetByID(34952194402811904L));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 
 
 }
