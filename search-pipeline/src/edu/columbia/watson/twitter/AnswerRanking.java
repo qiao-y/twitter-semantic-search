@@ -37,10 +37,12 @@ public class AnswerRanking {
 		
 		int count = 0;
 		for (Entry<Long, Vector> entry : corpusVectorEntrySet){
-			if (count++ % 10000 == 0)
-				logger.info(count + "cosine values calculated");
+			if (++count % 10000 == 0)
+				logger.info(count + " cosine values calculated");
 
 			Vector corpusVector = entry.getValue();
+			logger.info("corpusVector size = " + corpusVector.size());
+			logger.info("queryVector size = " + queryVector.size());
 			Double cosine = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
 
 			IDCosinePair newPair = new IDCosinePair(entry.getKey(),cosine);

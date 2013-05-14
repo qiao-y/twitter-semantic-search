@@ -24,6 +24,7 @@ public class GlobalProperty {
 	private String mySqlConnectionString;
 	private String mySqlUserName;
 	private String mySqlPassword;
+	private int rank;
 	private int K;
 	private int docNum;
 	
@@ -59,6 +60,7 @@ public class GlobalProperty {
 		mySqlConnectionString = prop.getProperty("Connection_String");
 		mySqlUserName = prop.getProperty("User");
 		mySqlPassword = prop.getProperty("Password");
+		rank = Integer.valueOf(prop.getProperty("Rank"));
 	}
 	
 	public String getDocFreqPath() {
@@ -104,6 +106,11 @@ public class GlobalProperty {
 	public String getMySqlPassword() {
 		return mySqlPassword;
 	}
+
+	public int getRank() {
+		return rank;
+	}
+
 	
 }
 

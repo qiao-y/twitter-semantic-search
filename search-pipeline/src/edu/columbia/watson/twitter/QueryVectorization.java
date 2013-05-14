@@ -80,7 +80,7 @@ public class QueryVectorization {
 		
 		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
 		
-		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getK());
+		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getRank());
 		
 		int count = 0;
 		for (Pair<IntWritable,VectorWritable> record :
