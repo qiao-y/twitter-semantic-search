@@ -2,12 +2,13 @@ package edu.columbia.watson.twitter;
 /**
  * @author qiaoyu
  */
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -26,11 +27,14 @@ public class AnswerRanking {
 	 * get the most relevant K tweet IDs by calculating cosine value
 	 * between the query and the corpus
 	 * @return K most relevant tweets
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public static List<IDCosinePair> getTopKAnswer(Vector queryVector) {
+	public static List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList) throws SQLException, IOException {
 		PriorityQueue<IDCosinePair> allCosValues = new PriorityQueue<IDCosinePair>();
-		Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getAllVectors().entrySet();
-
+		//Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getAllVectors().entrySet();
+		Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getCorpusVector(relevantTweetIDList).entrySet();
+		
 		int count = 0;
 		for (Entry<Long, Vector> entry : corpusVectorEntrySet){
 			if (count++ % 10000 == 0)

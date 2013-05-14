@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -20,10 +21,8 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 public class CorpusVectorCache {
 	private static CorpusVectorCache instance = null;
 	private static Logger logger = Logger.getLogger(CorpusVectorCache.class);
-
-	private Map<Long,Vector> corpusVector = new HashMap<Long,Vector>();
-	private final static String query = "SELECT * FROM tweetid_vec_mapping";
-
+	private Connection conn = null;
+		
 	public static CorpusVectorCache getInstance() 
 	{
 		if (instance == null)
@@ -31,7 +30,7 @@ public class CorpusVectorCache {
 		return instance;
 	}
 
-	public Vector getVectorByTweetID(long tweetID)
+	/*public Vector getVectorByTweetID(long tweetID)
 	{
 		return corpusVector.get(tweetID);
 	}
@@ -39,11 +38,38 @@ public class CorpusVectorCache {
 	public Map<Long,Vector> getAllVectors()
 	{
 		return corpusVector;
-	}
+	}*/
 
+	public Map<Long,Vector> getCorpusVector(List<Long> tweetIDList) throws SQLException, IOException{
+		
+		Statement st = conn.createStatement();
+		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM tweetid_vec_mapping where tweetID in (");
+		for (int i = 0 ; i < tweetIDList.size()-1 ; ++i){
+			queryBuilder.append(tweetIDList.get(i));
+			queryBuilder.append(",");
+		}
+		if (tweetIDList.size() >= 1)
+			queryBuilder.append(tweetIDList.get(tweetIDList.size()-1));
+		queryBuilder.append(")");
+		String query = queryBuilder.toString();
+		logger.info("Before executing query:" + query);
+		ResultSet rs = st.executeQuery(query);
+		Map<Long,Vector> result = new HashMap<Long,Vector>();
+		while (rs.next()) {
+			long tweetID = rs.getLong("tweetID");
+			byte[] vecBytes = rs.getBytes("vector");
+			ByteArrayInputStream byteIn = new ByteArrayInputStream(vecBytes);
+			DataInputStream dataIn = new DataInputStream(byteIn);
+			Vector v = VectorWritable.readVector(dataIn);
+			result.put(tweetID,v);
+		}
+		logger.info("Before return from getCorpusVector, size = " + result.size());
+		return result;
+	}
+	
+	
 	private CorpusVectorCache()
 	{	
-		Connection conn = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection(GlobalProperty.getInstance().getMySqlConnectionString(),
@@ -60,36 +86,7 @@ public class CorpusVectorCache {
 		}
 		logger.info("conn = null ? " + (conn == null));
 
-		int count = 0;
-		try {
-			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery(query);
-			logger.info("After executing query");
-			while (rs.next()) {
-				if (count++ % 10000 == 0)
-					logger.info(count + "records received.");
-				long tweetID = rs.getLong("tweetID");
-				byte[] vecBytes = rs.getBytes("vector");
-				ByteArrayInputStream byteIn = new ByteArrayInputStream(vecBytes);
-				DataInputStream dataIn = new DataInputStream(byteIn);
-				Vector v = VectorWritable.readVector(dataIn);
-				corpusVector.put(tweetID,v);
-			} 
-		} catch (SQLException e) {
-			logger.error(e);
-			logger.error("Error getting result, count = " + count);
-		} catch (IOException e) {
-			logger.error(e);
-			logger.error("Error converting to vector, count = " + count);
-		} finally{
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				logger.error(e);
-			}
-		}
 
-		logger.info("Done loading vector, size = " + corpusVector.size());
 	}
 }
 

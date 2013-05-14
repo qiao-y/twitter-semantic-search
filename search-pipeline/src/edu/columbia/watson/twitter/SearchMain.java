@@ -28,7 +28,7 @@ public class SearchMain {
 
 	private static Logger logger = Logger.getLogger(SearchMain.class);
 
-	public void run(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException {
+	public void run(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException {
 		logger.info("Initializing query parser class");
 		List<QueryClause> queryList = QueryParser.getAllQueriesFromFile(topicFileName);
 		logger.info("Initializing document retrieval class");
@@ -43,9 +43,10 @@ public class SearchMain {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);
 			}
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(linkedTweet);
 			logger.info("Before query: " + query.getQueryNumber() + "linked tweet = " + linkedTweet);
 			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
-			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector);
+			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
 			logger.info("After query: " + query.getQueryNumber() + "linked tweet = " + linkedTweet);
 			List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;
@@ -87,7 +88,7 @@ public class SearchMain {
 	}
 
 
-	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException
+	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException
 	{
 		if (args.length!= 2){
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");

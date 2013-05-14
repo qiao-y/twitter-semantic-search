@@ -109,6 +109,27 @@ public class DocumentRetrieval {
 		return "";
 	}*/
 
+	public List<Long> retrieveAllRelevantTweetID(String queryText) throws ParseException, IOException{
+		QueryParser parser = new QueryParser(Version.LUCENE_42, "content", analyzer);
+		Query query = parser.parse(queryText);
+
+		TopDocs results = searcher.search(query, 3 * GlobalProperty.getInstance().getK());
+		ScoreDoc[] hits = results.scoreDocs;
+
+		//only return the tweet ID fields
+		Set<Long> tweetIDSet = new HashSet<Long>(); //to remove duplicate tweet id
+		for (ScoreDoc doc : hits){
+			Long tweetID = Long.parseLong((searcher.doc(doc.doc).get("tweetID")));
+			tweetIDSet.add(tweetID);
+		}
+		List<Long> result = new ArrayList<Long>();
+		for (Long id : tweetIDSet)
+			result.add(id);
+		logger.info("Before return retrieveAllRelevantTweetID, size = " + result.size());
+		return result;
+
+	}
+	
 
 	/**
 	 * Second pass of search
@@ -126,7 +147,6 @@ public class DocumentRetrieval {
 		List<TrecResult> result = new ArrayList<TrecResult>();
 
 		//only return the tweet ID fields
-		//actually in addition we still have the absolute path saved
 		int count = 0;
 		Set<Long> tweetIDSet = new HashSet<Long>(); //to remove duplicate tweet id
 		for (ScoreDoc doc : hits){
