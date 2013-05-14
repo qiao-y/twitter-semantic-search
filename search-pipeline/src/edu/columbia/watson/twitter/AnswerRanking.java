@@ -41,10 +41,10 @@ public class AnswerRanking {
 				logger.info(count + " cosine values calculated");
 
 			Vector corpusVector = entry.getValue();
-			logger.info("corpusVector size = " + corpusVector.size());
-			logger.info("queryVector size = " + queryVector.size());
+			//logger.info("corpusVector size = " + corpusVector.size());
+			//logger.info("queryVector size = " + queryVector.size());
 			Double cosine = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
-
+			logger.info("id = " + entry.getKey() + ", cosine = " + cosine);
 			IDCosinePair newPair = new IDCosinePair(entry.getKey(),cosine);
 			if (allCosValues.size() < GlobalProperty.getInstance().getK()){		// use a min-heap to maintain the K largest cosine values
 				allCosValues.add(newPair);
@@ -54,7 +54,7 @@ public class AnswerRanking {
 				allCosValues.add(newPair);
 			}
 		}
-
+		logger.info("allCosValues size = " + allCosValues.size());
 		List<IDCosinePair> result = new ArrayList<IDCosinePair>();
 		while (allCosValues.size() > 0)
 			result.add(allCosValues.poll());

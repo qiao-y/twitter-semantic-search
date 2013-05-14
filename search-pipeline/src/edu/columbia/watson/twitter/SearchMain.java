@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,11 +47,12 @@ public class SearchMain {
 			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			List<TrecResult> result = new ArrayList<TrecResult>();
+			//List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;
 			for (IDCosinePair pair : answerList){
 				if (pair.getID() < query.getLinkedTweetID()){
-					result.add(new TrecResult(query.getQueryNumber(), pair.getID(), rank++, pair.getCosine().floatValue(), "alphaRun"));
+					TrecResult result = new TrecResult(query.getQueryNumber(), pair.getID(), rank++, pair.getCosine().floatValue(), "alphaRun");
+					out.write(result.toString());
 				}
 			}
 		}
