@@ -43,7 +43,10 @@ public class QueryVectorization {
 		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();	//wordID -> frequency
 		for (String term : splitted){
 			logger.info("Processing term: " + term);
-			int wordID = DictionaryCache.getInstance().getWordID(term);
+			Integer wordID = DictionaryCache.getInstance().getWordID(term);
+			if (wordID == null)
+				continue;		
+			//TODO: if every term returns null, we need fall back to Lucene-based search
 			if (termFrequencyCount.containsKey(wordID))
 				termFrequencyCount.put(wordID, termFrequencyCount.get(wordID) + 1);
 			else
