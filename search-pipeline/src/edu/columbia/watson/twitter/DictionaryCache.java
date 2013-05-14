@@ -81,7 +81,7 @@ public class DictionaryCache {
 	private void loadDocFrequency(String fileName)
 	{
 		Configuration conf = new Configuration();
-		Path input = new Path(fileName);
+		//Path input = new Path(fileName);
 
 		for (Pair<IntWritable,LongWritable> record :
 			new SequenceFileDirIterable<IntWritable,LongWritable>(new Path(fileName),

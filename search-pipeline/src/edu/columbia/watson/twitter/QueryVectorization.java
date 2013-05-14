@@ -1,29 +1,20 @@
 package edu.columbia.watson.twitter;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.iterator.sequencefile.PathFilters;
 import org.apache.mahout.common.iterator.sequencefile.PathType;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileDirIterable;
-import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
-import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.MatrixUtils;
 import org.apache.mahout.math.RandomAccessSparseVector;
-import org.apache.mahout.math.SparseColumnMatrix;
-import org.apache.mahout.math.SparseMatrix;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
-import org.apache.mahout.math.hadoop.stochasticsvd.SSVDSolver;
 
 import edu.columbia.watson.twitter.util.GlobalProperty;
 
@@ -34,13 +25,13 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
  */
 
 public class QueryVectorization {
-	private static Logger logger = Logger.getLogger(DocumentRetrieval.class);
+	//private static Logger logger = Logger.getLogger(QueryVectorization.class);
 	
-	private static Matrix transoposeVector(Vector vec) {
+	/*private static Matrix transoposeVector(Vector vec) {
 		SparseMatrix matrix = new SparseMatrix(vec.size(), 1);
 		matrix.assignColumn(0, vec);
 		return matrix;
-	}
+	}*/
 
 	// returns path of generated vector on disk
 	private static Vector getVectorFromString(String query){
