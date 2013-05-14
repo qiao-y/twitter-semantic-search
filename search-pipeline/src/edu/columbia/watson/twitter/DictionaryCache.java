@@ -36,27 +36,27 @@ public class DictionaryCache {
 		return instance;
 	}
 
-	public int getWordID(String word)
+	public Integer getWordID(String word)
 	{
 		return dictionary.get(word);
 	}
-	
-	public long getWordDocFrequency(int id)
+
+	public Long getWordDocFrequency(int id)
 	{
 		return docFreqMap.get(id);
 	}
-	
+
 	public int getDicSize()
 	{
 		return dictionary.size();
 	}
-	
+
 	private DictionaryCache() 
 	{
 		loadDictionaryToMap(GlobalProperty.getInstance().getDicPath());
 		loadDocFrequency(GlobalProperty.getInstance().getDocFreqPath());
 	}
-	
+
 	private void loadDictionaryToMap(String fileName)
 	{
 		Configuration conf = new Configuration();
@@ -77,7 +77,7 @@ public class DictionaryCache {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loadDocFrequency(String fileName)
 	{
 		Configuration conf = new Configuration();
@@ -100,11 +100,11 @@ public class DictionaryCache {
 
 	public static void main(String args[]) throws IOException
 	{
-	int id = DictionaryCache.getInstance().getWordID("hello");
-	System.out.println(id);
-	System.out.println(DictionaryCache.getInstance().getWordDocFrequency(id));
-	
-	//	System.out.println(DictionaryCache.getInstance().getWordDocFrequency(DictionaryCache.getInstance().getWordID("hello")));
+		int id = DictionaryCache.getInstance().getWordID("hello");
+		System.out.println(id);
+		System.out.println(DictionaryCache.getInstance().getWordDocFrequency(id));
+
+		//	System.out.println(DictionaryCache.getInstance().getWordDocFrequency(DictionaryCache.getInstance().getWordID("hello")));
 	}
 
 }
