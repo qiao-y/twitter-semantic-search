@@ -36,9 +36,9 @@ public class SearchMain {
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
-			String linkedTweet = "";
+			String linkedTweet = query.getQuery();
 			try {
-				linkedTweet = documentFetcher.retrieveLinkedTweetByID(linkedID);
+				linkedTweet += " " + documentFetcher.retrieveLinkedTweetByID(linkedID);
 			} catch (SQLException e) {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);

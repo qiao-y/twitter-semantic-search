@@ -42,6 +42,8 @@ public class QueryVectorization {
 		String [] splitted = query.split(" ");
 		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();	//wordID -> frequency
 		for (String term : splitted){
+			if (term == null || term.equals(""))
+				continue;
 			String termPrime = term.toLowerCase();
 			logger.info("Processing term: " + termPrime);
 			Integer wordID = DictionaryCache.getInstance().getWordID(termPrime);

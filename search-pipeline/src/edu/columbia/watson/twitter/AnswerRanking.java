@@ -3,9 +3,11 @@ package edu.columbia.watson.twitter;
  * @author qiaoyu
  */
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -19,6 +21,7 @@ public class AnswerRanking {
 
 	private static Logger logger = Logger.getLogger(AnswerRanking.class);
 
+	
 	/**
 	 * get the most relevant K tweet IDs by calculating cosine value
 	 * between the query and the corpus
@@ -32,15 +35,15 @@ public class AnswerRanking {
 		for (Entry<Long, Vector> entry : corpusVectorEntrySet){
 			if (count++ % 10000 == 0)
 				logger.info(count + "cosine values calculated");
-			
+
 			Vector corpusVector = entry.getValue();
-			Double cosine = corpusVector.dot(corpusVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
-			
+			Double cosine = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
+
 			IDCosinePair newPair = new IDCosinePair(entry.getKey(),cosine);
 			if (allCosValues.size() < GlobalProperty.getInstance().getK()){		// use a min-heap to maintain the K largest cosine values
 				allCosValues.add(newPair);
 			}
-			else{
+			else if (allCosValues.peek().getCosine() < newPair.getCosine()){
 				allCosValues.poll();
 				allCosValues.add(newPair);
 			}
@@ -49,20 +52,10 @@ public class AnswerRanking {
 		List<IDCosinePair> result = new ArrayList<IDCosinePair>();
 		while (allCosValues.size() > 0)
 			result.add(allCosValues.poll());
-		//sort the list according to the cosine value
-		
-		int n = result.size();
-		for (int i = 0 ; i < n ; ++i)
-			for (int j = i + 1 ; j < n ; ++j){
-				if (result.get(i).getCosine() > result.get(j).getCosine()){
-					IDCosinePair temp = result.get(i);
-					result.set(i, result.get(j));
-					result.set(j, temp);
-				}
-			}
+		Collections.reverse(result);		//sort in descending order
 		return result;
 	}
-	
+
 
 	public static class IDCosinePair implements Comparable<IDCosinePair>
 	{
@@ -72,7 +65,7 @@ public class AnswerRanking {
 			ID = tweetID;
 			cosine = cos;
 		}
-		
+
 		@Override
 		public int compareTo(IDCosinePair arg0) {
 			return cosine.compareTo(arg0.cosine);
@@ -81,10 +74,16 @@ public class AnswerRanking {
 		public long getID() {
 			return ID;
 		}
-		
+
 		public Double getCosine(){
 			return cosine;
+		}
+
+		@Override
+		public String toString() {
+			return "IDCosinePair [ID=" + ID + ", cosine=" + cosine + "]";
 		}	
+
 	}
-	
+
 }
