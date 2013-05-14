@@ -2,8 +2,7 @@ package edu.columbia.watson.twitter;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -13,6 +12,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
+import org.apache.mahout.common.iterator.sequencefile.PathFilters;
+import org.apache.mahout.common.iterator.sequencefile.PathType;
+import org.apache.mahout.common.iterator.sequencefile.SequenceFileDirIterable;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.MatrixUtils;
@@ -69,33 +71,41 @@ public class QueryVectorization {
 	/** do stochastic svd **/
 	public static Vector getLSAQueryVector(String query){
 		
+		Vector vectorQ = getVectorFromString(query);
+		
+		Vector vectorQPrime = getReducedQueryVec(vectorQ);
+
+		return vectorQPrime;
+	}
+	
+	private static Vector getReducedQueryVec(Vector vectorQ) {
+		
 		Configuration conf = new Configuration();
-		if (conf == null) {
-			logger.error("Cannot initialize Hadoop Configuration");
-			//throw new IOException("No Hadoop configuration present");
-			return null;
-		}
 		
 		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
 		
-		Vector vectorQ = getVectorFromString(query);
-		Matrix vectorQT = transoposeVector(vectorQ);
+		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getK());
 		
-		Matrix vectorSigIUT = null;
-		try {
-			vectorSigIUT = MatrixUtils.read(conf, sigmaIMultUTPath);
-		} catch (IOException e) {
-			logger.error("Cannot read SigmaI_Mult_UT matrix from " + sigmaIMultUTPath);
-			e.printStackTrace();
-			return null;
+		for (Pair<IntWritable,VectorWritable> record :
+				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath,
+					PathType.LIST,
+					PathFilters.logsCRCFilter(),
+					null,
+					true,
+					conf)) {
+			double sum = 0.0;
+			Vector vec = record.getSecond().get();
+			Iterator<Vector.Element> itr = vectorQ.iterateNonZero();
+			while (itr.hasNext()) {
+				Vector.Element ele = itr.next();
+				sum += ele.get() * vec.get(ele.index());
+			}
+			vectorQPrime.set(record.getFirst().get(), sum);
 		}
 		
-		Matrix vectorQPrime = vectorSigIUT.times(vectorQT);
-		Vector vectorQPrimeT = vectorQPrime.viewColumn(0);
-
-		return vectorQPrimeT;
+		return vectorQPrime;
 	}
-
+	
 	public static void main(String args[]) throws IOException
 	{
 		Vector sparseVector = QueryVectorization.getLSAQueryVector("hello world");
