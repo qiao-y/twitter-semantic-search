@@ -18,6 +18,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -55,10 +56,11 @@ public class DocumentRetrieval {
 	 * @throws IOException 
 	 */
 	public String retrieveLinkedTweetByID(long tweetID) throws ParseException, IOException {
-		QueryParser parser = new QueryParser(Version.LUCENE_42, "tweetID", analyzer);
-		String queryString = String.valueOf(tweetID);
-		Query query = parser.parse(queryString);
-
+		//QueryParser parser = new QueryParser(Version.LUCENE_42, "tweetID", analyzer);
+		//String queryString = String.valueOf(tweetID);
+		//Query query = parser.parse(queryString);
+		Query query = NumericRangeQuery.newLongRange("tweetID",tweetID, tweetID, true, true);
+		
 		//XXX: test this value. should be 1
 		TopDocs results = searcher.search(query, 10);
 		ScoreDoc[] hits = results.scoreDocs;
