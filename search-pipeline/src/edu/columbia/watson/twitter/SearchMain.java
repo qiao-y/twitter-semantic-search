@@ -70,9 +70,9 @@ public class SearchMain {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);
 			}
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(query.getQuery()));
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet + " " + query.getQuery()));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			Vector queryVector = qv.getLSAQueryVector(linkedTweet);
+			Vector queryVector = qv.getLSAQueryVector(linkedTweet + " " + query.getQuery());
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();

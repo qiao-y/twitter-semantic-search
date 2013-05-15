@@ -113,7 +113,7 @@ public class DocumentRetrieval {
 		QueryParser parser = new QueryParser(Version.LUCENE_42, "content", analyzer);
 		Query query = parser.parse(queryText);
 
-		TopDocs results = searcher.search(query, 100 * GlobalProperty.getInstance().getK());
+		TopDocs results = searcher.search(query, 100);
 		ScoreDoc[] hits = results.scoreDocs;
 
 		//only return the tweet ID fields
