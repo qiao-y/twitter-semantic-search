@@ -39,7 +39,7 @@ public class AnswerRanking {
 	 * @throws SQLException 
 	 * @throws ParseException 
 	 */
-	public List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList, String query) throws SQLException, IOException, ParseException {
+	public List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList, String query, Long queryTime) throws SQLException, IOException, ParseException {
 		PriorityQueue<IDCosinePair> allCosValues = new PriorityQueue<IDCosinePair>();
 		Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getCorpusVector(relevantTweetIDList).entrySet();
 		Float maxScore = 10000000.0f;
@@ -47,6 +47,8 @@ public class AnswerRanking {
 		
 		int count = 0;
 		for (Entry<Long, Vector> entry : corpusVectorEntrySet){
+			if (entry.getKey() > queryTime)
+				continue;
 			if (++count % 10000 == 0)
 				logger.info(count + " cosine values calculated");
 
