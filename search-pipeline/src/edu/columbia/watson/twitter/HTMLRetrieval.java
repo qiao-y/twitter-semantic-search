@@ -4,8 +4,12 @@ package edu.columbia.watson.twitter;
  * With reference to: Apache Lucene Demo program
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -30,7 +34,8 @@ public class HTMLRetrieval {
 	private IndexReader reader;
 	private IndexSearcher searcher;
 	private Analyzer analyzer;
-
+	private QueryParser parser;
+	
 	public HTMLRetrieval() throws IOException{
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
@@ -41,8 +46,51 @@ public class HTMLRetrieval {
 		}
 		searcher = new IndexSearcher(reader);
 		analyzer = new StandardAnalyzer(Version.LUCENE_42);
+		parser = new QueryParser(Version.LUCENE_42, "contents", analyzer);
 		logger.info("Done initializing HTMLRetrieval");
 	}
+
+
+	public void test() throws IOException, ParseException
+	{
+		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+		String queryText = stdin.readLine();
+		
+		Query query = parser.parse(queryText);
+
+		TopDocs results = searcher.search(query, 10 );
+		ScoreDoc[] hits = results.scoreDocs;
+		logger.info("HTML Hit size: " + hits.length); 
+		for (ScoreDoc doc : hits){
+			String filePath = searcher.doc(doc.doc).get("path").trim();
+			int startIndex = filePath.lastIndexOf('/');
+			int endIndex = filePath.lastIndexOf('.');
+			Long id = Long.valueOf(filePath.substring(startIndex + 1, endIndex).trim());
+			logger.info("filepath = " + filePath + ", id = " + id + ", score = " + doc.score);
+		}
+	}
+
+	public Map<Long,Float> getHTMLScores(String queryText, Float maxScore)throws ParseException, IOException{
+		
+		Query query = parser.parse(queryText);
+
+		TopDocs results = searcher.search(query, 100 * GlobalProperty.getInstance().getK());
+		ScoreDoc[] hits = results.scoreDocs;
+ 		logger.info("HTML Hit size: " + hits.length);
+ 		
+		Map<Long,Float> result = new HashMap<Long,Float>();
+ 		maxScore = hits[0].score;
+ 		
+		for (ScoreDoc doc : hits){
+			String filePath = searcher.doc(doc.doc).get("path").trim();
+			int startIndex = filePath.lastIndexOf('/');
+			int endIndex = filePath.lastIndexOf('.');
+			Long id = Long.valueOf(filePath.substring(startIndex + 1, endIndex).trim());
+			result.put(id, doc.score);
+		}
+		return result;
+	}
+
 
 	public float getLinkedHtmlScore(String queryText, long tweetID) throws ParseException, IOException{
 		QueryParser parser = new QueryParser(Version.LUCENE_42, "contents", analyzer);
@@ -56,7 +104,7 @@ public class HTMLRetrieval {
 			int startIndex = filePath.lastIndexOf('/');
 			int endIndex = filePath.lastIndexOf('.');
 			Long id = Long.valueOf(filePath.substring(startIndex + 1, endIndex).trim());
-			logger.info("filepath = " + filePath + ", id = " + id + ", score = " + doc.score);
+			//logger.info("filepath = " + filePath + ", id = " + id + ", score = " + doc.score);
 			if (id == tweetID){
 				return doc.score / hits[0].score;
 			}
@@ -64,24 +112,10 @@ public class HTMLRetrieval {
 		return 0.0f;
 	}
 
+	public static void main(String[] args) throws IOException, ParseException{
 
-	public static void main(String[] args){
-
-		HTMLRetrieval dr;
-		try {
-			dr = new HTMLRetrieval();
-			System.out.println(dr.getLinkedHtmlScore("BBC", 31653409140514816L));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-
+		HTMLRetrieval dr = new HTMLRetrieval();
+		dr.test();
 	}
 
 

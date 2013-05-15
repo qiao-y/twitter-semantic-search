@@ -49,9 +49,9 @@ public class HTMLLuceneIndexBuilder {
 					if (index == -1)
 						return;
 					Long id = Long.parseLong(fullName.substring(0,index));
-					doc.add(new StringField("path", file.getAbsolutePath(), Field.Store.YES));	
+					doc.add(new StringField("path", file.getAbsolutePath(), Field.Store.NO));	
 					doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(fis, "UTF-8"))));
-					doc.add(new LongField("tweetID", id, Field.Store.NO));
+					doc.add(new LongField("tweetID", id, Field.Store.YES));
 					writer.addDocument(doc);
 				}finally {
 					fis.close();

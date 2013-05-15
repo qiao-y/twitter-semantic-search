@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -40,8 +41,9 @@ public class AnswerRanking {
 	 */
 	public List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList, String query) throws SQLException, IOException, ParseException {
 		PriorityQueue<IDCosinePair> allCosValues = new PriorityQueue<IDCosinePair>();
-		//Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getAllVectors().entrySet();
 		Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getCorpusVector(relevantTweetIDList).entrySet();
+		Float maxScore = 10000000.0f;
+		Map<Long,Float> htmlScoreMap = htmlScorer.getHTMLScores(query, maxScore);
 		
 		int count = 0;
 		for (Entry<Long, Vector> entry : corpusVectorEntrySet){
@@ -54,7 +56,10 @@ public class AnswerRanking {
 			Double cosineScore = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
 
 			//url embedded in tweet score
-			float htmlScore = htmlScorer.getLinkedHtmlScore(query, entry.getKey());
+			float htmlScore = 0.0f;
+			if (htmlScoreMap.containsKey(entry.getKey()))
+					htmlScore = htmlScoreMap.get(entry.getKey());
+			//htmlScorer.getLinkedHtmlScore(query, entry.getKey());
 			
 			float lambda = GlobalProperty.getInstance().getLambda();
 			float delta = GlobalProperty.getInstance().getDelta();

@@ -97,10 +97,10 @@ public class QueryVectorization {
 		
 		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getRank());
 		
-		int count = 0;
+		//int count = 0;
 		for (Map.Entry<Integer, Vector> entry : sigmaIMultUTCache.entrySet()) {
-			logger.info("Iterating IMultU matrix row = " + count);
-			count++;
+			//logger.info("Iterating IMultU matrix row = " + count);
+		//	count++;
 			double sum = 0.0;
 			Vector vec = entry.getValue();
 			Iterator<Vector.Element> itr = vectorQ.iterateNonZero();
