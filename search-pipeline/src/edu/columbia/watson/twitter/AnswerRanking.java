@@ -12,6 +12,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.mahout.math.Vector;
 
 import edu.columbia.watson.twitter.util.GlobalProperty;
@@ -21,7 +22,13 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 public class AnswerRanking {
 
 	private static Logger logger = Logger.getLogger(AnswerRanking.class);
-
+	private HTMLRetrieval htmlScorer = null;
+	
+	public AnswerRanking() throws IOException
+	{
+		htmlScorer = new HTMLRetrieval();
+	}
+	
 	
 	/**
 	 * get the most relevant K tweet IDs by calculating cosine value
@@ -29,8 +36,9 @@ public class AnswerRanking {
 	 * @return K most relevant tweets
 	 * @throws IOException 
 	 * @throws SQLException 
+	 * @throws ParseException 
 	 */
-	public static List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList) throws SQLException, IOException {
+	public List<IDCosinePair> getTopKAnswer(Vector queryVector, List<Long> relevantTweetIDList, String query) throws SQLException, IOException, ParseException {
 		PriorityQueue<IDCosinePair> allCosValues = new PriorityQueue<IDCosinePair>();
 		//Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getAllVectors().entrySet();
 		Set<Entry<Long, Vector>> corpusVectorEntrySet = CorpusVectorCache.getInstance().getCorpusVector(relevantTweetIDList).entrySet();
@@ -41,11 +49,19 @@ public class AnswerRanking {
 				logger.info(count + " cosine values calculated");
 
 			Vector corpusVector = entry.getValue();
-			//logger.info("corpusVector size = " + corpusVector.size());
-			//logger.info("queryVector size = " + queryVector.size());
-			Double cosine = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
-			//logger.info("id = " + entry.getKey() + ", cosine = " + cosine);
-			IDCosinePair newPair = new IDCosinePair(entry.getKey(),cosine);
+			
+			//tweet score
+			Double cosineScore = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
+
+			//url embedded in tweet score
+			float htmlScore = htmlScorer.getLinkedHtmlScore(query, entry.getKey());
+			
+			float lambda = GlobalProperty.getInstance().getLambda();
+			float delta = GlobalProperty.getInstance().getDelta();
+			Double finalScore = lambda * cosineScore + (1 - lambda) * htmlScore * delta;
+			
+			IDCosinePair newPair = new IDCosinePair(entry.getKey(),finalScore);
+			
 			if (allCosValues.size() < GlobalProperty.getInstance().getK()){		// use a min-heap to maintain the K largest cosine values
 				allCosValues.add(newPair);
 			}
