@@ -55,9 +55,11 @@ public class HTMLRetrieval {
 			String filePath = searcher.doc(doc.doc).get("path").trim();
 			int startIndex = filePath.lastIndexOf('/');
 			int endIndex = filePath.lastIndexOf('.');
-			String id = filePath.substring(startIndex + 1, endIndex).trim();
-//			logger.info("filepath = " + filePath);
+			Long id = Long.valueOf(filePath.substring(startIndex + 1, endIndex).trim());
 			logger.info("filepath = " + filePath + ", id = " + id + ", score = " + doc.score);
+			if (id == tweetID){
+				return doc.score;
+			}
 		}
 		return 0.0f;
 	}
@@ -68,7 +70,7 @@ public class HTMLRetrieval {
 		HTMLRetrieval dr;
 		try {
 			dr = new HTMLRetrieval();
-			dr.getLinkedHtmlScore("BBC", 31653409140514816L);
+			System.out.println(dr.getLinkedHtmlScore("BBC", 31653409140514816L));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
