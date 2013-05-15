@@ -28,6 +28,7 @@ public class HTMLLuceneIndexBuilder {
 	private static void indexDocs(IndexWriter writer, File file) throws IOException{
 		if (file.canRead()) {
 			if (file.isDirectory()) {
+				System.out.println("Indexing dir " + file.getAbsolutePath());
 				String[] files = file.list();
 				if (files != null) {
 					for (int i = 0; i < files.length; i++) {
