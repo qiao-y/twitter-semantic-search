@@ -60,7 +60,7 @@ public class AnswerRanking {
 			//url embedded in tweet score
 			float htmlScore = 0.0f;
 			if (htmlScoreMap.containsKey(entry.getKey())){
-				htmlScore = 3 * htmlScoreMap.get(entry.getKey());
+				htmlScore = htmlScoreMap.get(entry.getKey());
 				logger.info("contains html, query = " + query + " , tweetid = " + entry.getKey() + ", score = " + htmlScore);
 				
 			}
@@ -69,6 +69,7 @@ public class AnswerRanking {
 			float lambda = GlobalProperty.getInstance().getLambda();
 			float delta = GlobalProperty.getInstance().getDelta();
 			Double finalScore = lambda * cosineScore + (1 - lambda) * htmlScore * delta;
+			logger.info("cosine score = " + cosineScore + ", html score = " + htmlScore + ", final score = " + finalScore);
 			
 			IDCosinePair newPair = new IDCosinePair(entry.getKey(),finalScore);
 			

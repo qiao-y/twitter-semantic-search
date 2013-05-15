@@ -60,7 +60,7 @@ public class SearchMain {
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
 			String linkedTweet = "";
-
+			
 			try {
 				linkedTweet = documentFetcher.retrieveLinkedTweetByID(linkedID);
 				if (linkedTweet.equals("")){
@@ -71,10 +71,13 @@ public class SearchMain {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);
 			}
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet + " " + query.getQuery()));
+			
+			String expandedQuery = query.getQuery() + " " + normalize(linkedTweet);
+			
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(expandedQuery);
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			Vector queryVector = qv.getLSAQueryVector(linkedTweet + " " + query.getQuery());
-			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, normalize(linkedTweet) + " " + query.getQuery(),query.getLinkedTweetID());
+			Vector queryVector = qv.getLSAQueryVector(expandedQuery);
+			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, expandedQuery, query.getLinkedTweetID());
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;
