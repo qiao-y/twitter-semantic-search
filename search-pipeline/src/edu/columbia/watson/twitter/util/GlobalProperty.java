@@ -27,6 +27,10 @@ public class GlobalProperty {
 	private int rank;
 	private int K;
 	private int docNum;
+	private String htmlIndexPath;
+	private float lambda;
+	private float delta;
+	
 	
 	public static final double EPSILON = 1e-6;
 	
@@ -44,23 +48,30 @@ public class GlobalProperty {
 			InputStream in = new FileInputStream("environment.properties");
 			prop.load(in);
 			in.close();
+			
+			corpusDir = prop.getProperty("Corpus_Dir");
+			indexDir = prop.getProperty("Corpus_Index");
+			dicPath = prop.getProperty("Dictionary_File");
+			docFreqPath = prop.getProperty("DocFreq_File");
+			sigmaIMultUTPath = prop.getProperty("SigmaI_Mult_UT_File");
+			tempDir = prop.getProperty("Temp_Dir");
+			K = Integer.valueOf(prop.getProperty("k"));
+			docNum = Integer.valueOf(prop.getProperty("Document_Num"));
+			mySqlConnectionString = prop.getProperty("Connection_String");
+			mySqlUserName = prop.getProperty("User");
+			mySqlPassword = prop.getProperty("Password");
+			rank = Integer.valueOf(prop.getProperty("Rank"));
+			htmlIndexPath = prop.getProperty("HTML_Index");
+			lambda = Float.valueOf(prop.getProperty("Lambda"));
+			delta = Float.valueOf(prop.getProperty("Delta"));
+			
 			logger.info("Successfully loaded property file.");
+			logger.info(toString());
+			
 		} catch (IOException e) {
 			logger.error("Error loading property file!");
 		}
-		
-		corpusDir = prop.getProperty("Corpus_Dir");
-		indexDir = prop.getProperty("Corpus_Index");
-		dicPath = prop.getProperty("Dictionary_File");
-		docFreqPath = prop.getProperty("DocFreq_File");
-		sigmaIMultUTPath = prop.getProperty("SigmaI_Mult_UT_File");
-		tempDir = prop.getProperty("Temp_Dir");
-		K = Integer.valueOf(prop.getProperty("k"));
-		docNum = Integer.valueOf(prop.getProperty("Document_Num"));
-		mySqlConnectionString = prop.getProperty("Connection_String");
-		mySqlUserName = prop.getProperty("User");
-		mySqlPassword = prop.getProperty("Password");
-		rank = Integer.valueOf(prop.getProperty("Rank"));
+
 	}
 	
 	public String getDocFreqPath() {
@@ -111,6 +122,30 @@ public class GlobalProperty {
 		return rank;
 	}
 
+	public String getHtmlIndexPath() {
+		return htmlIndexPath;
+	}
+
+	public float getLambda() {
+		return lambda;
+	}
+
+	public float getDelta() {
+		return delta;
+	}
+
+	@Override
+	public String toString() {
+		return "GlobalProperty [corpusDir=" + corpusDir + ", indexDir="
+				+ indexDir + ", dicPath=" + dicPath + ", docFreqPath="
+				+ docFreqPath + ", sigmaIMultUTPath=" + sigmaIMultUTPath
+				+ ", tempDir=" + tempDir + ", mySqlConnectionString="
+				+ mySqlConnectionString + ", mySqlUserName=" + mySqlUserName
+				+ ", mySqlPassword=" + mySqlPassword + ", rank=" + rank
+				+ ", K=" + K + ", docNum=" + docNum + ", htmlIndexPath="
+				+ htmlIndexPath + ", lambda=" + lambda + ", delta=" + delta
+				+ "]";
+	}
 	
 }
 
