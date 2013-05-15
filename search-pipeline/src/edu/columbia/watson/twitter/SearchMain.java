@@ -27,6 +27,28 @@ public class SearchMain {
 
 	private static Logger logger = Logger.getLogger(SearchMain.class);
 
+	public String normalize(String query){
+		logger.info("before normalization, query = " + query);
+		String [] split = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (String term : split){
+			String temp = term.toLowerCase();
+			boolean use = true;
+			for (int i = 0 ; i < temp.length() ; ++i)
+				if (!('a' <= temp.charAt(i) && temp.charAt(i) <= 'z')){
+					use = false;
+					break;
+				}
+			if (!use)
+				continue;
+			sb.append(temp);
+			sb.append(" ");
+		}
+		logger.info("after normalization, query = " + sb.toString());
+		return sb.toString();
+	}
+	
+	
 	public void run(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException {
 		logger.info("Initializing query parser class");
 		List<QueryClause> queryList = QueryParser.getAllQueriesFromFile(topicFileName);
@@ -36,13 +58,14 @@ public class SearchMain {
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
 			String linkedTweet = query.getQuery();
+			
 			try {
 				linkedTweet += " " + documentFetcher.retrieveLinkedTweetByID(linkedID);
 			} catch (SQLException e) {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);
 			}
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(linkedTweet);
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
@@ -90,6 +113,7 @@ public class SearchMain {
 
 	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException
 	{
+		SearchMain driver = new SearchMain();
 		if (args.length!= 2){
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");
 			return;
