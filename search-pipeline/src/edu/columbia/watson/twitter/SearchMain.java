@@ -113,7 +113,6 @@ public class SearchMain {
 
 	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException
 	{
-		SearchMain driver = new SearchMain();
 		if (args.length!= 2){
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");
 			return;
