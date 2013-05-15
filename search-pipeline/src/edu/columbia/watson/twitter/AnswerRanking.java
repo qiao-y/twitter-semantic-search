@@ -44,7 +44,7 @@ public class AnswerRanking {
 			//logger.info("corpusVector size = " + corpusVector.size());
 			//logger.info("queryVector size = " + queryVector.size());
 			Double cosine = corpusVector.dot(queryVector) / (Math.sqrt(corpusVector.getLengthSquared()) * Math.sqrt(queryVector.getLengthSquared()));
-			logger.info("id = " + entry.getKey() + ", cosine = " + cosine);
+			//logger.info("id = " + entry.getKey() + ", cosine = " + cosine);
 			IDCosinePair newPair = new IDCosinePair(entry.getKey(),cosine);
 			if (allCosValues.size() < GlobalProperty.getInstance().getK()){		// use a min-heap to maintain the K largest cosine values
 				allCosValues.add(newPair);
@@ -59,6 +59,7 @@ public class AnswerRanking {
 		while (allCosValues.size() > 0)
 			result.add(allCosValues.poll());
 		Collections.reverse(result);		//sort in descending order
+		logger.info(result.toString());
 		return result;
 	}
 
