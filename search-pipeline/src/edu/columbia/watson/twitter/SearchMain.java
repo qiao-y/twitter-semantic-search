@@ -74,7 +74,7 @@ public class SearchMain {
 			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet + " " + query.getQuery()));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			Vector queryVector = qv.getLSAQueryVector(linkedTweet + " " + query.getQuery());
-			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, query.getQuery(),query.getLinkedTweetID());
+			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, normalize(linkedTweet) + " " + query.getQuery(),query.getLinkedTweetID());
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;

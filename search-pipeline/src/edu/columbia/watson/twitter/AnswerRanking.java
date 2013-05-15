@@ -60,7 +60,7 @@ public class AnswerRanking {
 			//url embedded in tweet score
 			float htmlScore = 0.0f;
 			if (htmlScoreMap.containsKey(entry.getKey())){
-				htmlScore = htmlScoreMap.get(entry.getKey());
+				htmlScore = 3 * htmlScoreMap.get(entry.getKey());
 				logger.info("contains html, query = " + query + " , tweetid = " + entry.getKey() + ", score = " + htmlScore);
 				
 			}
