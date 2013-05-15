@@ -41,20 +41,22 @@ public class HTMLRetrieval {
 		}
 		searcher = new IndexSearcher(reader);
 		analyzer = new StandardAnalyzer(Version.LUCENE_42);
+		logger.info("Done initializing HTMLRetrieval");
 	}
 
 	public float getLinkedHtmlScore(String queryText, long tweetID) throws ParseException, IOException{
-		QueryParser parser = new QueryParser(Version.LUCENE_42, "content", analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_42, "contents", analyzer);
 		Query query = parser.parse(queryText);
 
 		TopDocs results = searcher.search(query, 2 * GlobalProperty.getInstance().getK());
 		ScoreDoc[] hits = results.scoreDocs;
-
+		logger.info("HTML Hit size: " + hits.length); 
 		for (ScoreDoc doc : hits){
 			String filePath = searcher.doc(doc.doc).get("path").trim();
 			int startIndex = filePath.lastIndexOf('/');
 			int endIndex = filePath.lastIndexOf('.');
-			String id = filePath.substring(startIndex, endIndex - startIndex + 1).trim();
+			String id = filePath.substring(startIndex + 1, endIndex).trim();
+//			logger.info("filepath = " + filePath);
 			logger.info("filepath = " + filePath + ", id = " + id + ", score = " + doc.score);
 		}
 		return 0.0f;
