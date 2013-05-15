@@ -67,7 +67,8 @@ public class SearchMain {
 			}
 			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			Vector queryVector = QueryVectorization.getLSAQueryVector(linkedTweet);
+			QueryVectorization qv = new QueryVectorization();
+			Vector queryVector = qv.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();
@@ -80,7 +81,6 @@ public class SearchMain {
 			}
 		}
 		out.close();
-
 	}
 
 	public void runBaseline(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException{
@@ -118,7 +118,6 @@ public class SearchMain {
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");
 			return;
 		}
-		SearchMain driver = new SearchMain();
 		driver.run(args[0],args[1]);
 	}
 

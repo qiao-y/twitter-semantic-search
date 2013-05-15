@@ -1,6 +1,5 @@
 package edu.columbia.watson.twitter;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,15 +26,41 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
 
 public class QueryVectorization {
 	private static Logger logger = Logger.getLogger(QueryVectorization.class);
+	private Map<Integer,Vector> sigmaIMultUTCache = new HashMap<Integer,Vector>();
 	
-	/*private static Matrix transoposeVector(Vector vec) {
-		SparseMatrix matrix = new SparseMatrix(vec.size(), 1);
-		matrix.assignColumn(0, vec);
-		return matrix;
-	}*/
-
+	public QueryVectorization() {
+		loadVectorCache(); 
+	}
+	
+	
+	private void loadVectorCache(){
+		Configuration conf = new Configuration();
+		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
+		
+		logger.info("Before loadVectorCache, sigmaIMultUTPath = " + sigmaIMultUTPath.toString());	
+	
+		int count = 0;
+		SequenceFileDirIterable<IntWritable,VectorWritable> seqFileDir = 
+				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath, PathType.LIST, PathFilters.logsCRCFilter(), null, true, conf);
+		for (Pair<IntWritable,VectorWritable> record : seqFileDir) {
+			logger.info("Loading IMultU matrix row = " + count++);
+			Integer first = record.getFirst().get();
+			Vector vec = record.getSecond().get();
+			sigmaIMultUTCache.put(first, vec);
+		}
+		logger.info("After loadVectorCache, size = " + sigmaIMultUTCache.size());
+	}
+	
+	/** do stochastic svd **/
+	public Vector getLSAQueryVector(String query){
+		Vector vectorQ = getVectorFromString(query);
+		Vector vectorQPrime = getReducedQueryVec(vectorQ);
+		return vectorQPrime;
+	}
+	
+	
 	// returns path of generated vector on disk
-	private static Vector getVectorFromString(String query){
+	private Vector getVectorFromString(String query){
 		/**
 		 * a very ugly way now - split by space
 		 */
@@ -67,48 +92,33 @@ public class QueryVectorization {
 		return result;
 	}
 
-	/** do stochastic svd **/
-	public static Vector getLSAQueryVector(String query){
-		Vector vectorQ = getVectorFromString(query);
-		Vector vectorQPrime = getReducedQueryVec(vectorQ);
-		return vectorQPrime;
-	}
-	
-	private static Vector getReducedQueryVec(Vector vectorQ) {
-		
-		Configuration conf = new Configuration();
-		
-		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
+
+	private Vector getReducedQueryVec(Vector vectorQ) {
 		
 		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getRank());
 		
 		int count = 0;
-		for (Pair<IntWritable,VectorWritable> record :
-				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath,
-					PathType.LIST,
-					PathFilters.logsCRCFilter(),
-					null,
-					true,
-					conf)) {
+		for (Map.Entry<Integer, Vector> entry : sigmaIMultUTCache.entrySet()) {
 			logger.info("Iterating IMultU matrix row = " + count);
 			count++;
 			double sum = 0.0;
-			Vector vec = record.getSecond().get();
+			Vector vec = entry.getValue();
 			Iterator<Vector.Element> itr = vectorQ.iterateNonZero();
 			while (itr.hasNext()) {
 				Vector.Element ele = itr.next();
 				sum += ele.get() * vec.get(ele.index());
 			}
-			vectorQPrime.set(record.getFirst().get(), sum);
+			vectorQPrime.set(entry.getKey(), sum);
 		}
-		
 		return vectorQPrime;
 	}
 	
+	/*
 	public static void main(String args[]) throws IOException
 	{
 		Vector sparseVector = QueryVectorization.getLSAQueryVector("hello world");
 		System.out.println(sparseVector.asFormatString());
 	}
+	*/
 
 }
