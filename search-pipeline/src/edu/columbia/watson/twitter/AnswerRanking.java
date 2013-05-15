@@ -57,8 +57,11 @@ public class AnswerRanking {
 
 			//url embedded in tweet score
 			float htmlScore = 0.0f;
-			if (htmlScoreMap.containsKey(entry.getKey()))
-					htmlScore = htmlScoreMap.get(entry.getKey());
+			if (htmlScoreMap.containsKey(entry.getKey())){
+				htmlScore = htmlScoreMap.get(entry.getKey());
+				logger.info("contains html, query = " + query + " , tweetid = " + entry.getKey() + ", score = " + htmlScore);
+				
+			}
 			//htmlScorer.getLinkedHtmlScore(query, entry.getKey());
 			
 			float lambda = GlobalProperty.getInstance().getLambda();

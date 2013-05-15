@@ -74,7 +74,7 @@ public class HTMLRetrieval {
 		
 		Query query = parser.parse(queryText);
 
-		TopDocs results = searcher.search(query, 100 * GlobalProperty.getInstance().getK());
+		TopDocs results = searcher.search(query, 10000);
 		ScoreDoc[] hits = results.scoreDocs;
  		logger.info("HTML Hit size: " + hits.length);
  		
@@ -86,7 +86,7 @@ public class HTMLRetrieval {
 			int startIndex = filePath.lastIndexOf('/');
 			int endIndex = filePath.lastIndexOf('.');
 			Long id = Long.valueOf(filePath.substring(startIndex + 1, endIndex).trim());
-			result.put(id, doc.score);
+			result.put(id, 3 * doc.score);
 		}
 		return result;
 	}
