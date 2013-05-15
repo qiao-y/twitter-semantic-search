@@ -55,6 +55,7 @@ public class SearchMain {
 		logger.info("Initializing document retrieval class");
 		DocumentRetrieval documentFetcher = new DocumentRetrieval();
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
+		QueryVectorization qv = new QueryVectorization();
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
 			String linkedTweet = query.getQuery();
@@ -67,7 +68,6 @@ public class SearchMain {
 			}
 			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			QueryVectorization qv = new QueryVectorization();
 			Vector queryVector = qv.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
@@ -117,6 +117,7 @@ public class SearchMain {
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");
 			return;
 		}
+		SearchMain driver = new SearchMain();
 		driver.run(args[0],args[1]);
 	}
 
