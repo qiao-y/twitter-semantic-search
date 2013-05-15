@@ -45,10 +45,10 @@ public class SearchMain {
 			sb.append(" ");
 		}
 		logger.info("after normalization, query = " + sb.toString());
-		return sb.toString();
+		return sb.toString();	
 	}
-	
-	
+
+
 	public void run(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException {
 		logger.info("Initializing query parser class");
 		List<QueryClause> queryList = QueryParser.getAllQueriesFromFile(topicFileName);
@@ -58,15 +58,19 @@ public class SearchMain {
 		QueryVectorization qv = new QueryVectorization();
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
-			String linkedTweet = query.getQuery();
-			
+			String linkedTweet = "";
+
 			try {
-				linkedTweet += " " + documentFetcher.retrieveLinkedTweetByID(linkedID);
+				linkedTweet = documentFetcher.retrieveLinkedTweetByID(linkedID);
+				if (linkedTweet.equals("")){
+					logger.info("NOT FOUND: " + linkedID);
+					linkedTweet = query.getQuery();
+				}
 			} catch (SQLException e) {
 				logger.error("Error getting linked tweet, tweet id = " + linkedID);
 				logger.error(e);
 			}
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(linkedTweet));
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(normalize(query.getQuery()));
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			Vector queryVector = qv.getLSAQueryVector(linkedTweet);
 			List<IDCosinePair> answerList = AnswerRanking.getTopKAnswer(queryVector, relevantID);
