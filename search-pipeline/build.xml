@@ -13,8 +13,10 @@
         <fileset dir="${lib.dir}" />
     </path>
 
+    <path id="lib.path.wildcard" path="${lib.dir}" />
+
     <path id="run.path.id">
-        <path refid="lib.path.id" />
+        <!-- <path refid="lib.path.id" /> -->
         <fileset dir="${jar.dir}" />
     </path>
 
@@ -44,12 +46,12 @@
 
     <target name="scripts" depends="jar">
         <pathconvert property="run.path.id" refid="run.path.id"  />
-        <pathconvert property="lib.path.id" refid="lib.path.id"  />
-
+<!--        <pathconvert property="lib.path.id" refid="lib.path.id"  /> -->
+	<pathconvert property="lib.path.wildcard" refid="lib.path.wildcard"  />
         <property name="suffix" value="sh" />
         <property name="param_prefix" value="$" />
         <property name="cp_sep" value=":" />
-        <property name="java_command" value="java -Xmx4g -classpath &quot;${run.path.id}&quot;" />
+        <property name="java_command" value="java -Xmx48g -classpath &quot;${lib.path.wildcard}/*:${run.path.id}&quot;" />
         <property name="script_prefix" value="#!/bin/sh${line.separator}" />
 
         <echo file="./etc/run.${suffix}" message="${script_prefix}" />

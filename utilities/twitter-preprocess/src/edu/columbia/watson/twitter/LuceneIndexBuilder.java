@@ -16,7 +16,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -26,7 +25,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 public class LuceneIndexBuilder {
-	private static final String docsPath = "/mnt/corpus/post_process";
+	private static final String docsPath = "/mnt/corpus/post_process_clean";
 	private static final String indexPath = "/mnt/corpus/index";
 
 	public static void main(String args[]) throws IOException{
@@ -59,10 +58,11 @@ public class LuceneIndexBuilder {
 					String [] splitted = line.split("\t");
 					if (splitted.length < 7)
 						continue;
-					doc.add(new StringField("path", currentFile, Field.Store.YES));
+					//doc.add(new StringField("path", currentFile, Field.Store.YES));
 					doc.add(new TextField("content", splitted[6], Field.Store.NO));
 					doc.add(new LongField("tweetID", Long.parseLong(splitted[0]), Field.Store.YES));
 					writer.addDocument(doc);
+					//writer.commit();
 				}
 				in.close();
 				System.out.println("File " + currentFile + " done");

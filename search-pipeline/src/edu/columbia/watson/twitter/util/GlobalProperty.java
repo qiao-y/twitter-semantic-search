@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /** NOTE: This class is NOT thread-safe
  */
 public class GlobalProperty {
@@ -22,10 +24,17 @@ public class GlobalProperty {
 	private String mySqlConnectionString;
 	private String mySqlUserName;
 	private String mySqlPassword;
+	private int rank;
 	private int K;
 	private int docNum;
+	private String htmlIndexPath;
+	private float lambda;
+	private float delta;
+	private String wordNetPath;
 	
 	public static final double EPSILON = 1e-6;
+	
+	private static Logger logger = Logger.getLogger(GlobalProperty.class);
 	
 	public static GlobalProperty getInstance() {
 		if (instance == null)
@@ -39,19 +48,31 @@ public class GlobalProperty {
 			InputStream in = new FileInputStream("environment.properties");
 			prop.load(in);
 			in.close();
+			
+			corpusDir = prop.getProperty("Corpus_Dir");
+			indexDir = prop.getProperty("Corpus_Index");
+			dicPath = prop.getProperty("Dictionary_File");
+			docFreqPath = prop.getProperty("DocFreq_File");
+			sigmaIMultUTPath = prop.getProperty("SigmaI_Mult_UT_File");
+			tempDir = prop.getProperty("Temp_Dir");
+			K = Integer.valueOf(prop.getProperty("k"));
+			docNum = Integer.valueOf(prop.getProperty("Document_Num"));
+			mySqlConnectionString = prop.getProperty("Connection_String");
+			mySqlUserName = prop.getProperty("User");
+			mySqlPassword = prop.getProperty("Password");
+			rank = Integer.valueOf(prop.getProperty("Rank"));
+			htmlIndexPath = prop.getProperty("HTML_Index");
+			lambda = Float.valueOf(prop.getProperty("Lambda"));
+			delta = Float.valueOf(prop.getProperty("Delta"));
+			wordNetPath = prop.getProperty("WordNet_Path");
+			
+			logger.info("Successfully loaded property file.");
+			logger.info(toString());
+			
 		} catch (IOException e) {
-			System.err.println("Error loading property file!");
-			e.printStackTrace();
+			logger.error("Error loading property file!");
 		}
-		
-		corpusDir = prop.getProperty("Corpus_Dir");
-		indexDir = prop.getProperty("Corpus_Index");
-		dicPath = prop.getProperty("Dictionary_File");
-		docFreqPath = prop.getProperty("DocFreq_File");
-		sigmaIMultUTPath = prop.getProperty("SigmaI_Mult_UT_File");
-		tempDir = prop.getProperty("Temp_Dir");
-		K = Integer.valueOf(prop.getProperty("k"));
-		docNum = Integer.valueOf(prop.getProperty("Document_Num"));
+
 	}
 	
 	public String getDocFreqPath() {
@@ -97,5 +118,39 @@ public class GlobalProperty {
 	public String getMySqlPassword() {
 		return mySqlPassword;
 	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public String getHtmlIndexPath() {
+		return htmlIndexPath;
+	}
+
+	public float getLambda() {
+		return lambda;
+	}
+
+	public float getDelta() {
+		return delta;
+	}
+
+	public String getWordNetPath() {
+		return wordNetPath;
+	}
+
+	@Override
+	public String toString() {
+		return "GlobalProperty [corpusDir=" + corpusDir + ", indexDir="
+				+ indexDir + ", dicPath=" + dicPath + ", docFreqPath="
+				+ docFreqPath + ", sigmaIMultUTPath=" + sigmaIMultUTPath
+				+ ", tempDir=" + tempDir + ", mySqlConnectionString="
+				+ mySqlConnectionString + ", mySqlUserName=" + mySqlUserName
+				+ ", mySqlPassword=" + mySqlPassword + ", rank=" + rank
+				+ ", K=" + K + ", docNum=" + docNum + ", htmlIndexPath="
+				+ htmlIndexPath + ", lambda=" + lambda + ", delta=" + delta
+				+ ", wordNetPath=" + wordNetPath + "]";
+	}
 	
 }
+

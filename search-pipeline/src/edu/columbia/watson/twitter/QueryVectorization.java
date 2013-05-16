@@ -1,29 +1,20 @@
 package edu.columbia.watson.twitter;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.SequenceFile;
 import org.apache.log4j.Logger;
 import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.iterator.sequencefile.PathFilters;
 import org.apache.mahout.common.iterator.sequencefile.PathType;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileDirIterable;
-import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterator;
-import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.MatrixUtils;
 import org.apache.mahout.math.RandomAccessSparseVector;
-import org.apache.mahout.math.SparseColumnMatrix;
-import org.apache.mahout.math.SparseMatrix;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
-import org.apache.mahout.math.hadoop.stochasticsvd.SSVDSolver;
 
 import edu.columbia.watson.twitter.util.GlobalProperty;
 
@@ -34,23 +25,56 @@ import edu.columbia.watson.twitter.util.GlobalProperty;
  */
 
 public class QueryVectorization {
-	private static Logger logger = Logger.getLogger(DocumentRetrieval.class);
+	private static Logger logger = Logger.getLogger(QueryVectorization.class);
+	private Map<Integer,Vector> sigmaIMultUTCache = new HashMap<Integer,Vector>();
 	
-	private static Matrix transoposeVector(Vector vec) {
-		SparseMatrix matrix = new SparseMatrix(vec.size(), 1);
-		matrix.assignColumn(0, vec);
-		return matrix;
+	public QueryVectorization() {
+		loadVectorCache(); 
 	}
-
+	
+	
+	private void loadVectorCache(){
+		Configuration conf = new Configuration();
+		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
+		
+		logger.info("Before loadVectorCache, sigmaIMultUTPath = " + sigmaIMultUTPath.toString());	
+	
+		int count = 0;
+		SequenceFileDirIterable<IntWritable,VectorWritable> seqFileDir = 
+				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath, PathType.LIST, PathFilters.logsCRCFilter(), null, true, conf);
+		for (Pair<IntWritable,VectorWritable> record : seqFileDir) {
+			logger.info("Loading IMultU matrix row = " + count++);
+			Integer first = record.getFirst().get();
+			Vector vec = record.getSecond().get();
+			sigmaIMultUTCache.put(first, vec);
+		}
+		logger.info("After loadVectorCache, size = " + sigmaIMultUTCache.size());
+	}
+	
+	/** do stochastic svd **/
+	public Vector getLSAQueryVector(String query){
+		Vector vectorQ = getVectorFromString(query);
+		Vector vectorQPrime = getReducedQueryVec(vectorQ);
+		return vectorQPrime;
+	}
+	
+	
 	// returns path of generated vector on disk
-	private static Vector getVectorFromString(String query){
+	private Vector getVectorFromString(String query){
 		/**
 		 * a very ugly way now - split by space
 		 */
 		String [] splitted = query.split(" ");
 		Map<Integer,Integer> termFrequencyCount = new HashMap<Integer,Integer>();	//wordID -> frequency
 		for (String term : splitted){
-			int wordID = DictionaryCache.getInstance().getWordID(term);
+			if (term == null || term.equals(""))
+				continue;
+			String termPrime = term.toLowerCase();
+			logger.info("Processing term: " + termPrime);
+			Integer wordID = DictionaryCache.getInstance().getWordID(termPrime);
+			if (wordID == null)
+				continue;		
+			//TODO: if every term returns null, we need fall back to Lucene-based search
 			if (termFrequencyCount.containsKey(wordID))
 				termFrequencyCount.put(wordID, termFrequencyCount.get(wordID) + 1);
 			else
@@ -68,49 +92,33 @@ public class QueryVectorization {
 		return result;
 	}
 
-	/** do stochastic svd **/
-	public static Vector getLSAQueryVector(String query){
-		
-		Vector vectorQ = getVectorFromString(query);
-		
-		Vector vectorQPrime = getReducedQueryVec(vectorQ);
 
-		return vectorQPrime;
-	}
-	
-	private static Vector getReducedQueryVec(Vector vectorQ) {
+	private Vector getReducedQueryVec(Vector vectorQ) {
 		
-		Configuration conf = new Configuration();
+		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getRank());
 		
-		Path sigmaIMultUTPath = new Path(GlobalProperty.getInstance().getSigmaIMultUTPath());
-		
-		RandomAccessSparseVector vectorQPrime = new RandomAccessSparseVector(GlobalProperty.getInstance().getK());
-		
-		for (Pair<IntWritable,VectorWritable> record :
-				new SequenceFileDirIterable<IntWritable,VectorWritable>(sigmaIMultUTPath,
-					PathType.LIST,
-					PathFilters.logsCRCFilter(),
-					null,
-					true,
-					conf)) {
+		//int count = 0;
+		for (Map.Entry<Integer, Vector> entry : sigmaIMultUTCache.entrySet()) {
+			//logger.info("Iterating IMultU matrix row = " + count);
+		//	count++;
 			double sum = 0.0;
-			Vector vec = record.getSecond().get();
+			Vector vec = entry.getValue();
 			Iterator<Vector.Element> itr = vectorQ.iterateNonZero();
 			while (itr.hasNext()) {
 				Vector.Element ele = itr.next();
 				sum += ele.get() * vec.get(ele.index());
 			}
-			vectorQPrime.set(record.getFirst().get(), sum);
+			vectorQPrime.set(entry.getKey(), sum);
 		}
-		
 		return vectorQPrime;
 	}
 	
+	/*
 	public static void main(String args[]) throws IOException
 	{
 		Vector sparseVector = QueryVectorization.getLSAQueryVector("hello world");
-		//		QueryVectorization zizi = new QueryVectorization();
-		//	zizi.loadDictionaryToMap("/mnt/corpus/dict/dictionary.file-0");
+		System.out.println(sparseVector.asFormatString());
 	}
+	*/
 
 }
