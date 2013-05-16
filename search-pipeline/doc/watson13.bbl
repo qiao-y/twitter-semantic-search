@@ -1,0 +1,52 @@
+\begin{thebibliography}{1}
+
+\bibitem{abel2011semantic}
+F.~Abel, Q.~Gao, G.-J. Houben, and K.~Tao.
+\newblock Semantic enrichment of twitter posts for user profile construction on
+  the social web.
+\newblock In {\em The Semanic Web: Research and Applications}, pages 375--389.
+  Springer, 2011.
+
+\bibitem{dong2010time}
+A.~Dong, R.~Zhang, P.~Kolari, J.~Bai, F.~Diaz, Y.~Chang, Z.~Zheng, and H.~Zha.
+\newblock Time is of the essence: improving recency ranking using twitter data.
+\newblock In {\em Proceedings of the 19th international conference on World
+  wide web}, pages 331--340. ACM, 2010.
+
+\bibitem{gaffney2010iranelection}
+D.~Gaffney.
+\newblock \# iranelection: quantifying online activism.
+\newblock 2010.
+
+\bibitem{han2011lexical}
+B.~Han and T.~Baldwin.
+\newblock Lexical normalisation of short text messages: Makn sens a\# twitter.
+\newblock In {\em Proceedings of the 49th Annual Meeting of the Association for
+  Computational Linguistics: Human Language Technologies}, volume~1, pages
+  368--378, 2011.
+
+\bibitem{owoputi2013improved}
+O.~Owoputi, B.~O’Connor, C.~Dyer, K.~Gimpel, N.~Schneider, and N.~A. Smith.
+\newblock Improved part-of-speech tagging for online conversational text with
+  word clusters.
+\newblock In {\em Proceedings of NAACL}, 2013.
+
+\bibitem{sakaki2010earthquake}
+T.~Sakaki, M.~Okazaki, and Y.~Matsuo.
+\newblock Earthquake shakes twitter users: real-time event detection by social
+  sensors.
+\newblock In {\em Proceedings of the 19th international conference on World
+  wide web}, pages 851--860. ACM, 2010.
+
+\bibitem{soboroff2012evaluating}
+I.~Soboroff, D.~McCullough, J.~Lin, C.~Macdonald, I.~Ounis, and R.~McCreadie.
+\newblock Evaluating real-time search over tweets.
+\newblock {\em Proc. ICWSM}, pages 943--961, 2012.
+
+\bibitem{voorhees2005trec}
+E.~Voorhees, D.~K. Harman, et~al.
+\newblock {\em TREC: Experiment and evaluation in information retrieval},
+  volume~63.
+\newblock MIT press Cambridge, 2005.
+
+\end{thebibliography}

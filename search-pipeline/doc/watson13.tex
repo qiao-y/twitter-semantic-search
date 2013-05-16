@@ -1,5 +1,4 @@
 \documentclass{acm_proc_article-sp}
-
 \begin{document}
 
 \title{Enabling Semantic Searching on Microblogs with Latent Semantic Analysis (Draft) 
@@ -21,7 +20,8 @@ In our project, we implemented a LSA-based semantic search pipeline over tweets.
 \end{abstract}
 
 \section{Introduction}
-Twitter is the most popular microblogging platform nowadays. There are more than 190 million active users on Twitter and they publish more than 65 million tweets every day \footnote{http://techcrunch.com/2010/06/08/twitter-190-million-users/}. Some research papers show that information retrieved from Twitter can be valuable when used in areas such as earthquake warning [1], opinion mining [2] and fresh website discovering [3]. Growing constantly and involving people's daily social activity, Twitter becomes a goldmine for big data and semantic research [4].\\
+Twitter is the most popular microblogging platform nowadays. There are more than 190 million active users on Twitter and they publish more than 65 million tweets every day\footnote{http://techcrunch.com/2010/06/08/twitter-190-million-users/}. Some research papers show that information retrieved from Twitter can be valuable when used in areas such as earthquake warning\cite{sakaki2010earthquake}, opinion mining\cite{gaffney2010iranelection} and fresh website discovering \cite{dong2010time}. Growing constantly and involving people's daily social activity, Twitter becomes a goldmine for big data and semantic research\cite{abel2011semantic} .
+
 TREC (Text REtrieval Conference) encourages research in information retrieval from large text collections. The TREC workshop Microblog Track examines search tasks and evaluation methodologies for information seeking behaviors in microblogging environments \footnote{http://trec.nist.gov/pubs/call2012.html}. The 2012 Microblog Track focuses on addressing two search tasks: Real-time Adhoc and Real-time Filtering whereby a user's information need will be represented by a query at a specific time. In our project, we focus on Real-time Adhoc task: in the real-time search task, the user wishes to see the most recent but relevant information to the query. Hence, the system should answer a query by providing a list of relevant tweets ordered from newest to oldest, starting from the time the query was issued. When scoring tweets, systems should favor relevant and highly informative tweets about the query topic. \footnote{https://sites.google.com/site/microblogtrack/2012-guidelines}
 
 \section{Corpus}
@@ -43,34 +43,51 @@ Due to several reasons we finally get 11153327 tweets, instead of 16 million. So
 
 \section{Evaluation Criteria and Baseline}
 As in \cite{soboroff2012evaluating}, TREC committee generated 49 topics that are covered by the corpus, and manually labeled some tweets and use it as evaluation criteria. More specifically, a group of researchers pooled results from multiple diverse retrieval systems, and then manually mark them as relevant, highly relevant, or non relevant. Then they use a statistical method \cite{voorhees2005trec} to generate a high quality test collection. The committee use a Perl script to evaluate each team's run. All the results are measured by P@30.
-How we generated baseline (vs official baseline)\\
 
+
+TREC committee provided a \texttt{Lucene}\footnote{http://lucene.apache.org/} enabled baseline at http://trec.nist.gov/data/microblog/11/lucene-baseline.gz, whose average precision at 30 is approximately 7.06\%. As a comparison, we generated a baseline ourselves using the same technique but based on the post-processed corpus, whose average precision at 30 is approximately 10.95\%.
+   
 \section{Preprocessing}
-Remove redundant characters(giiirrl)\\
-Remove numbers\\
-Remove non-english tweets\\
-Dump URLs\\
+In order to maximize the searching precision, we make the following preprocessing for the corpus.
+\begin{description}
+\item[Tokenization] This is the most commonly used text preprocessing techniques in NLP.
+\item[Removal of non-english tweets] TREC treated all non-English tweets as not relevant. We used an open-source library \texttt{language-detection}\footnote{https://code.google.com/p/language-detection/}.
+\item[POS Tagging] POS Tag each tweet in order to do further query expansion. The challenge is that many of the tweets are mis-spelled, and this problem has been partially addressed by \cite{owoputi2013improved}. We thus used this method.
+\item[Normalization] We removed all the numbers and converted all English characters to lowercase.
+\end{description}
 
 \section{Rank model}
-BM25\\
-URL-enhanced ranking formula
+As there are many URLs embedded in tweets, we also take into account of this kind of information into account when scoring the tweet. The score formula is\\ $DocumentScore = \lambda*TweetScore + (1-\lambda)*URLScore*\delta$.\\ The two parameters $\lambda$ and $\delta$ are used to scale the importance of the HTML. In practice, we chose $\lambda$ to be 0.8 and $\delta$ to be 0.95.
+
 
 \section{LSA}
 How distributed LSA works\\
 
 \section{Evaluation Results}
-results\\
+We did a bunch of experiments and come up with the following results.
+\begin{table}
+\centering
+\caption{Evaluation Results}
+\begin{tabular}{|l|l|l} \hline
+Run&P@30\\ \hline
+Official Baseline&7.06\%\\ \hline
+Our Baseline&10.95\%\\ \hline
+LSA&11.02\%\\ \hline
+LSA+Query Expansion&27.28\%\\ \hline
+LSA+Query Expansion+ Embedded HTML&28.98\%\\ \hline
+\hline\end{tabular}
+\end{table}
+
 
 \section{Conclusion}
-What has been done 
 
 \section{Future work}
-What needs to be done
+There is still much to be improved in our project. Firstly when generating the matrix using SVD algorithm, we set the iteration to be 0, for fear that it might consume too much time. This to some extent sacrificed the precision of the matrix. If condition permits we hope to re-generate the matrix using 1 or more iterations. Secondly we want to normalize the corpus using a more sophisticated way. We did not consider too much of the characteristics of the tweet itself. This paper \cite{han2011lexical} gives us a relatively good explanation of how to normalize tweets. Thirdly, we plan to add fuzzy search function to our system. The current system focuses on the TREC guideline, which requires a tweet ID and a query text. When added fuzzy search function, use does not need to input a tweet ID. 
 
 \section{Acknowledgments}
 We would like to thank Prof. Alfio Massimiliano Gliozzo for his great class and illuminating discussion with us. Many thanks also go to Dr. Or Biran for his very patient instructions on our projects and detailed explanation. This work is impossible without the help of them. 
 
 \bibliographystyle{abbrv}
-\bibliography{waton13}
+\bibliography{watson13}
 \balancecolumns
 \end{document}
