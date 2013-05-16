@@ -31,7 +31,7 @@ import java.io.*;
  */
 public class DiagonalMatrixInv {
 
-	private static final double EPSILON = 1e-6;
+	private static final double EPSILON = 1e-7;
 
 	public static void main(String[] args) throws Exception {
 
@@ -40,6 +40,7 @@ public class DiagonalMatrixInv {
 			return;
 		}
 
+		int partitionNum = 5;
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
 
@@ -63,9 +64,10 @@ public class DiagonalMatrixInv {
 			}
 		}
 
+
 		List<SequenceFile.Writer> writers = new ArrayList<SequenceFile.Writer>();
 		try {
-			for (int i = 0; i < 7; ++i) {
+			for (int i = 0; i < partitionNum; ++i) {
 				writers.add(SequenceFile.createWriter(fs, conf, new Path(args[1]+"/part-0000"+i), IntWritable.class, VectorWritable.class));
 			}
 			for (int i = 0; i < vec.columnSize(); ++i) {
@@ -73,9 +75,9 @@ public class DiagonalMatrixInv {
 					VectorWritable vector = new VectorWritable();
 					id.set(i);
 					vector.set(matrix.viewRow(i));
-					writers.get(i%7).append(id, vector);
+					writers.get(i%partitionNum).append(id, vector);
 			}
-			for (int i = 0; i < 7; ++i) {
+			for (int i = 0; i < partitionNum; ++i) {
 				writers.get(i).close();
 			}
 		} catch (IOException e) {
