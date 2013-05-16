@@ -2,7 +2,7 @@
 
 \begin{document}
 
-\title{Enabling Semantic Searching on Microblogs with Latent Semantic Analysis
+\title{Enabling Semantic Searching on Microblogs with Latent Semantic Analysis (Draft) 
 \titlenote{This work is done with the help of Prof. Alfio Gliozzo and Dr. Or Biran in partial satisfaction of the requirements of E6998\_9 Spring 2013 course at Columbia University}
 }
 
@@ -17,21 +17,32 @@
 \maketitle
 
 \begin{abstract}
-In our project, we implemented a LSA-based semantic search pipeline over tweets. More particularly, we used TREC 2011 microblog track corpus and its evaluation criteria. The results show that our algorithm yield a XXX performance rise compared with baseline using P@30. 
-
+In our project, we implemented a LSA-based semantic search pipeline over tweets. More particularly, we used TREC 2011 microblog track corpus and its evaluation criteria. The results show that our algorithm yield a performance rise about 400\% compared with baseline using P@30. 
 \end{abstract}
 
 \section{Introduction}
-Why this project\\
+Tweet has long been a rich source of information, and its official search technique is still based on the traditional bag-of-words model.  
 TREC game rules\\
 
 \section{Corpus}
-How we get the corpus\\
-What it contains\\
-The size of the corpus\\
+We use the official TREC\footnote{http://trec.nist.gov/} 2011 microblog twitter collection, aka Tweets2011, as our corpus\footnote{http://trec.nist.gov/data/tweets/}. The corpus contains approximately 16 million tweets sampled between January 23rd and February 8th, 2011. Although TREC committee provided us with a corpus dumper\footnote{https://github.com/lintool/twitter-tools}, for some reason it is broken now and we had to build such a tool by ourselves. We simply downloaded all the HTML pages containing such tweets and parse the tweet to get plain text. It really takes some time to dump such a large corpus. For us, the entire process lasted about 4 days using 5 different machines concurrently. For each tweet, we maintain the following information:
+\begin{table}
+\centering
+\caption{Information Stored in Corpus}
+\begin{tabular}{|l|l|l} \hline
+TweetID&32957874548375552\\ \hline
+Author&BlakeRamsey\\ \hline
+Time&4:24 PM - 2 Feb 11\\ \hline
+HashTag& \#Egypt\\ \hline
+URL&http://bbc.in/hTfSea\\ \hline
+Location&Union Market, Brooklyn\\ \hline
+Tweet&Campaign fights 'major bus cuts\\ \hline
+\hline\end{tabular}
+\end{table}
+Due to several reasons we finally get 11153327 tweets, instead of 16 million. Some reason might be: the deletion of a tweet, the protection of tweet, and network failure.
 
 \section{Evaluation Criteria and Baseline}
-How TREC evaluates the results\\
+As in \cite{soboroff2012evaluating}, TREC committee generated 49 topics that are covered by the corpus, and manually labeled some tweets and use it as evaluation criteria. More specifically, a group of researchers pooled results from multiple diverse retrieval systems, and then manually mark them as relevant, highly relevant, or non relevant. Then they use a statistical method \cite{voorhees2005trec} to generate a high quality test collection. The committee use a Perl script to evaluate each team's run. All the results are measured by P@30.
 How we generated baseline (vs official baseline)\\
 
 \section{Preprocessing}
@@ -57,7 +68,7 @@ What has been done
 What needs to be done
 
 \section{Acknowledgments}
-Show compliments to Alifo and Or\\  
+We would like to thank Prof. Alfio Massimiliano Gliozzo for his great class and illuminating discussion with us. Many thanks also go to Dr. Or Biran for his very patient instructions on our projects and detailed explanation. This work is impossible without the help of them. 
 
 \bibliographystyle{abbrv}
 \bibliography{waton13}
