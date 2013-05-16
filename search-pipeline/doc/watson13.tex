@@ -56,7 +56,9 @@ BM25\\
 URL-enhanced ranking formula
 
 \section{LSA}
-How distributed LSA works\\
+Employing Mahout \footnote{http://mahout.apache.org/} and DefaultAnalyzer document vectorizer from Lucene, we first represent the corpus as a set of tf-df vectors [LSA 1], which is a occurrence matrix whose rows correspond to terms and whose columns corresponds to documents. Then we use LSA [LSA 2] to find a low rank approximation [LSA 3] to the occurrence matrix. A low rank approximation can be seen as a de-noisified matrix which helps to improve scoring later. Moreover, with a low rank approximation, we can finish essential computation within reasonable time limit.
+
+To perform LSA and get a low rank approximation in an efficient way, we use distributed Stochastic SVD [LSA 4] tools from Mahout to decompose the initial occurrence matrix with a cluster. We also generate a factor matrix for Stochastic SVD on query vectors later. With a rank reduced occurrence matrix and a query vector projected to same space (rank reduced in the same way), we can easily score each document against the given query with cosine similarity [LSA 5].
 
 \section{Evaluation Results}
 results\\
