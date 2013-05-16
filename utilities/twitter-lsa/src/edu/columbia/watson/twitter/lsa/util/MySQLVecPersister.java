@@ -52,7 +52,7 @@ public class MySQLVecPersister {
 		VectorWritable vec = null;
 
 		try {
-			String query = "INSERT INTO rowid_vec_mapping (row_id, vector) VALUES(?,?)";
+			String query = "INSERT INTO rowid_vec_mapping_10 (row_id, vector) VALUES(?,?)";
 			PreparedStatement pstmt = conn.prepareStatement(query);
 
 			Configuration conf = new Configuration();
