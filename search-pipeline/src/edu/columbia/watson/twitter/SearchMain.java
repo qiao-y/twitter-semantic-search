@@ -29,6 +29,19 @@ public class SearchMain {
 
 	private static Logger logger = Logger.getLogger(SearchMain.class);
 
+	private DocumentRetrieval documentFetcher = null;
+	private QueryVectorization qv = null;
+	private AnswerRanking ar = null;
+	private QueryExpansion qe = null;
+	
+	public SearchMain() throws IOException{
+		documentFetcher = new DocumentRetrieval();
+		qv = new QueryVectorization();
+		ar = new AnswerRanking();
+		qe = new QueryExpansion();
+	}
+	
+	
 	public String normalize(String query){
 		logger.info("before normalization, query = " + query);
 		String [] split = query.split(" ");
@@ -51,10 +64,6 @@ public class SearchMain {
 	}
 
 	public List<ReadableResult> run(Long linkedID, String queryText) throws IOException, org.apache.lucene.queryparser.classic.ParseException, SQLException{
-		DocumentRetrieval documentFetcher = new DocumentRetrieval();
-		QueryVectorization qv = new QueryVectorization();
-		AnswerRanking ar = new AnswerRanking();
-		QueryExpansion qe = new QueryExpansion();
 		
 		QueryClause query = new QueryClause("Q01",queryText,linkedID,new Date());
 		String linkedTweet = "";
@@ -91,9 +100,6 @@ public class SearchMain {
 		logger.info("Initializing document retrieval class");
 		DocumentRetrieval documentFetcher = new DocumentRetrieval();
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
-		QueryVectorization qv = new QueryVectorization();
-		AnswerRanking ar = new AnswerRanking();
-		QueryExpansion qe = new QueryExpansion();
 		
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
