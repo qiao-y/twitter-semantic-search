@@ -77,10 +77,10 @@ public class SearchMain {
 			String expandedQuery = query.getQuery() + " " + normalize(linkedTweet);
 			String doubleExpandedQuery = qe.expandQuery(expandedQuery);
 			
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(doubleExpandedQuery);
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(expandedQuery);
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			Vector queryVector = qv.getLSAQueryVector(doubleExpandedQuery);
-			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, expandedQuery, query.getLinkedTweetID());
+			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, doubleExpandedQuery, query.getLinkedTweetID());
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();
 			int rank = 0;
