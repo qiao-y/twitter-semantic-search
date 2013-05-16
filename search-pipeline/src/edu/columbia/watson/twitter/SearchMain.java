@@ -160,12 +160,14 @@ public class SearchMain {
 
 	public static void main(String [] args) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException
 	{
-		if (args.length!= 2){
+/*		if (args.length!= 2){
 			System.err.println("Usage: run.sh edu.columbia.watson.twitter.SearchMain query_file output_file");
 			return;
-		}
+		}*/
 		SearchMain driver = new SearchMain();
-		driver.run(args[0],args[1]);
+
+		System.out.println(driver.run(34952194402811904L,"BBC World Service staff cuts"));
+		//driver.run(args[0],args[1]);
 	}
 
 }

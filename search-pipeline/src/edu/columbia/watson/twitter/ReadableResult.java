@@ -30,6 +30,11 @@ public class ReadableResult {
 		this.score = score;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "ReadableResult [tweet=" + tweet + ", tweetID=" + tweetID
+				+ ", score=" + score + "]";
+	}
+		
 	
 }
