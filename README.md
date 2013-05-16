@@ -8,13 +8,9 @@ utilities/twitter-preprocessor/Preprocessor: filter out retweets, extract URLs, 
 
 search-pipeline  
 ======================
-DocumentRetrieval: Search through Lucene indices  
+  
 
 
-TODO:  
-1. Use n-gram  
-2. Use twitter-specific tokenizer  
-3. Use URLs as part of corpus  
 
 Please direct all questions and suggestions to our mailing list: twitter-semantic-search@lists.cs.columbia.edu  
   
