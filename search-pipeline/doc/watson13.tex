@@ -64,7 +64,7 @@ To perform LSA and get a low rank approximation in an efficient way, we use dist
 results\\
 
 \section{Conclusion}
-What has been done 
+In this article, we introduced our approach to address Real-time Adhoc search task presented by 2012 Microblog Track in TREC workshop series. We first acquired the corpus with 5 parallel tasks running for 4 days. With the corpus, we were able to setup official baseline and our own baseline (based on Lucene) and made some initial evaluations. To realize our approach, we preform several steps of preprocessing, including removing redundant characters, removing numbers, remove non-English tweets and URL dumping. The rank model was determined before we perform any further processing. We came up with an approach involving both corpus and the external resources pointed by URLs in corpus. Then, the scalable machine learning library, Mahout, was employed to performance LSA on a very huge matrix and generate essential data for documents scoring against queries. Finally, based on the official evaluation approach, we found the precision of our approach is 300\% higher than baseline.
 
 \section{Future work}
 What needs to be done
