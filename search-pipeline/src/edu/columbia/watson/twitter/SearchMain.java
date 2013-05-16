@@ -57,6 +57,8 @@ public class SearchMain {
 		BufferedWriter out = new BufferedWriter(new FileWriter(outputFileName));
 		QueryVectorization qv = new QueryVectorization();
 		AnswerRanking ar = new AnswerRanking();
+		QueryExpansion qe = new QueryExpansion();
+		
 		for (QueryClause query : queryList){
 			Long linkedID = query.getLinkedTweetID();
 			String linkedTweet = "";
@@ -73,10 +75,11 @@ public class SearchMain {
 			}
 			
 			String expandedQuery = query.getQuery() + " " + normalize(linkedTweet);
+			String doubleExpandedQuery = qe.expandQuery(expandedQuery);
 			
-			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(expandedQuery);
+			List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(doubleExpandedQuery);
 			logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
-			Vector queryVector = qv.getLSAQueryVector(expandedQuery);
+			Vector queryVector = qv.getLSAQueryVector(doubleExpandedQuery);
 			List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, expandedQuery, query.getLinkedTweetID());
 			logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
 			//List<TrecResult> result = new ArrayList<TrecResult>();

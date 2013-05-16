@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-configuration-1.9.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/jaws-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/ark-tweet-nlp-0.3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

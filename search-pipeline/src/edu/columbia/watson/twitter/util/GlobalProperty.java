@@ -30,7 +30,7 @@ public class GlobalProperty {
 	private String htmlIndexPath;
 	private float lambda;
 	private float delta;
-	
+	private String wordNetPath;
 	
 	public static final double EPSILON = 1e-6;
 	
@@ -64,6 +64,7 @@ public class GlobalProperty {
 			htmlIndexPath = prop.getProperty("HTML_Index");
 			lambda = Float.valueOf(prop.getProperty("Lambda"));
 			delta = Float.valueOf(prop.getProperty("Delta"));
+			wordNetPath = prop.getProperty("WordNet_Path");
 			
 			logger.info("Successfully loaded property file.");
 			logger.info(toString());
@@ -134,6 +135,10 @@ public class GlobalProperty {
 		return delta;
 	}
 
+	public String getWordNetPath() {
+		return wordNetPath;
+	}
+
 	@Override
 	public String toString() {
 		return "GlobalProperty [corpusDir=" + corpusDir + ", indexDir="
@@ -144,7 +149,7 @@ public class GlobalProperty {
 				+ ", mySqlPassword=" + mySqlPassword + ", rank=" + rank
 				+ ", K=" + K + ", docNum=" + docNum + ", htmlIndexPath="
 				+ htmlIndexPath + ", lambda=" + lambda + ", delta=" + delta
-				+ "]";
+				+ ", wordNetPath=" + wordNetPath + "]";
 	}
 	
 }
