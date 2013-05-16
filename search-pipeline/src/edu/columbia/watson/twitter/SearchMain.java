@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,7 +50,41 @@ public class SearchMain {
 		return sb.toString();	
 	}
 
-
+	public List<ReadableResult> run(Long linkedID, String queryText) throws IOException, org.apache.lucene.queryparser.classic.ParseException, SQLException{
+		DocumentRetrieval documentFetcher = new DocumentRetrieval();
+		QueryVectorization qv = new QueryVectorization();
+		AnswerRanking ar = new AnswerRanking();
+		QueryExpansion qe = new QueryExpansion();
+		
+		QueryClause query = new QueryClause("Q01",queryText,linkedID,new Date());
+		String linkedTweet = "";
+		try {
+			linkedTweet = documentFetcher.retrieveLinkedTweetByID(linkedID);
+			if (linkedTweet.equals("")){
+				logger.info("NOT FOUND: " + linkedID);
+				linkedTweet = query.getQuery();
+			}
+		} catch (SQLException e) {
+			logger.error("Error getting linked tweet, tweet id = " + linkedID);
+			logger.error(e);
+		}
+		
+		String expandedQuery = query.getQuery() + " " + normalize(linkedTweet);
+		String doubleExpandedQuery = qe.expandQuery(expandedQuery);
+		
+		List<Long> relevantID = documentFetcher.retrieveAllRelevantTweetID(expandedQuery);
+		logger.info("Before query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
+		Vector queryVector = qv.getLSAQueryVector(doubleExpandedQuery);
+		List<IDCosinePair> answerList = ar.getTopKAnswer(queryVector, relevantID, doubleExpandedQuery, query.getLinkedTweetID());
+		logger.info("After query: " + query.getQueryNumber() + " linked tweet = " + linkedTweet);
+		List<ReadableResult> result = new ArrayList<ReadableResult>();
+		for (IDCosinePair pair : answerList){
+			result.add(new ReadableResult(documentFetcher.retrieveLinkedTweetByID(pair.getID()),pair.getID(),pair.getCosine().floatValue()));
+		}
+		return result;
+	}
+		
+	
 	public void run(String topicFileName, String outputFileName) throws DOMException, ParserConfigurationException, SAXException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, SQLException {
 		logger.info("Initializing query parser class");
 		List<QueryClause> queryList = QueryParser.getAllQueriesFromFile(topicFileName);

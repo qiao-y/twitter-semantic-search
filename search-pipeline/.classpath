@@ -2,11 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/jaws-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/mysql-connector-java-5.1.25-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/jcl-over-slf4j-1.7.5-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/jcl-over-slf4j-1.7.5.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/slf4j-log4j12-1.7.5.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-core-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-analyzers-common-4.2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-queryparser-4.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-queries-4.2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/hadoop-core-1.1.2.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/mahout-core-0.7.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/mahout-math-0.7.jar"/>
@@ -16,7 +19,9 @@
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-configuration-1.9.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/jaws-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/ark-tweet-nlp-0.3.2.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-core-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-analyzers-common-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/E6998_Semantic_Tech_In_IBM_Watson/twitter-semantic-search/search-pipeline/lib/lucene-queries-4.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/qiaoyu/Documents/sdk/ark-tweet-nlp-0.3.2/new/test/tweet-nlp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
