@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{abel2011semantic}
 F.~Abel, Q.~Gao, G.-J. Houben, and K.~Tao.
@@ -18,12 +18,35 @@ D.~Gaffney.
 \newblock \# iranelection: quantifying online activism.
 \newblock 2010.
 
+\bibitem{halko2012randomized}
+N.~P. Halko.
+\newblock {\em Randomized methods for computing low-rank approximations of
+  matrices}.
+\newblock PhD thesis, University of Colorado, 2012.
+
 \bibitem{han2011lexical}
 B.~Han and T.~Baldwin.
 \newblock Lexical normalisation of short text messages: Makn sens a\# twitter.
 \newblock In {\em Proceedings of the 49th Annual Meeting of the Association for
   Computational Linguistics: Human Language Technologies}, volume~1, pages
   368--378, 2011.
+
+\bibitem{jones1972statistical}
+K.~S. Jones.
+\newblock A statistical interpretation of term specificity and its application
+  in retrieval.
+\newblock {\em Journal of documentation}, 28(1):11--21, 1972.
+
+\bibitem{landauer1998introduction}
+T.~K. Landauer, P.~W. Foltz, and D.~Laham.
+\newblock An introduction to latent semantic analysis.
+\newblock {\em Discourse processes}, 25(2-3):259--284, 1998.
+
+\bibitem{lra-book}
+I.~Markovsky.
+\newblock {\em Low Rank Approximation: Algorithms, Implementation,
+  Applications}.
+\newblock Springer, 2012.
 
 \bibitem{owoputi2013improved}
 O.~Owoputi, B.~O’Connor, C.~Dyer, K.~Gimpel, N.~Schneider, and N.~A. Smith.
@@ -37,6 +60,11 @@ T.~Sakaki, M.~Okazaki, and Y.~Matsuo.
   sensors.
 \newblock In {\em Proceedings of the 19th international conference on World
   wide web}, pages 851--860. ACM, 2010.
+
+\bibitem{singhal2001modern}
+A.~Singhal.
+\newblock Modern information retrieval: A brief overview.
+\newblock {\em IEEE Data Engineering Bulletin}, 24(4):35--43, 2001.
 
 \bibitem{soboroff2012evaluating}
 I.~Soboroff, D.~McCullough, J.~Lin, C.~Macdonald, I.~Ounis, and R.~McCreadie.
