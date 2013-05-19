@@ -45,7 +45,7 @@ public class GlobalProperty {
 	private GlobalProperty() {
 		Properties prop = new Properties();
 		try {
-			InputStream in = new FileInputStream("environment.properties");
+			InputStream in = new FileInputStream("/var/lib/tomcat7/webapps/ROOT/environment.properties");
 			prop.load(in);
 			in.close();
 			
